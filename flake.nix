@@ -5,13 +5,13 @@
   inputs.nixpkgs.url = "nixpkgs";
   inputs.nix.url = "nix/2.11.1";
 
-  outputs = { self, nixpkgs, nix }:
+  outputs = { self, flake-utils, nixpkgs, nix }:
+    flake-utils.lib.eachDefaultSystem (system:
     let
-      system = "x86_64-linux";
       pkgs = nixpkgs.outputs.legacyPackages.${system};
       nix-pkg = nix.packages.${system}.default;
     in {
-      packages.${system} = rec {
+      packages = rec {
         jdk = pkgs.jdk17;
         clojure = pkgs.callPackage ./clojure.nix { inherit jdk ant; };
         sbcl = pkgs.callPackage ./sbcl.nix {};
@@ -26,7 +26,7 @@
         nix = pkgs.callPackage ./nix.nix { nix = nix-pkg; };
         deps = pkgs.callPackage ./deps.nix { inherit jdk clojure; };
       };
-    };
+    });
 
 }
   
