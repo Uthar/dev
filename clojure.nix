@@ -38,8 +38,8 @@ in stdenvNoCC.mkDerivation rec {
   '';
 
   installPhase = ''
-    mkdir $out
-    cp -v clojure-${version}.jar $out
+    mkdir -p $out/share/java
+    cp -v clojure-${version}.jar $out/share/java
   '';
 
 }

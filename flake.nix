@@ -24,6 +24,7 @@
         abcl = pkgs.callPackage ./abcl.nix { inherit jdk ant; };
         openssl_1_0_0 = pkgs.callPackage ./openssl_1_0_0.nix {};
         nix = pkgs.callPackage ./nix.nix { nix = nix-pkg; };
+        deps = pkgs.callPackage ./deps.nix { inherit jdk clojure; };
       };
     };
 
