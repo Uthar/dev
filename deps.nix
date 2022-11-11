@@ -10,17 +10,17 @@ let
     ,path ? "src"
     ,ns ? pname
     ,deps ? []
+    ,patches ? []
     , ...
-  }@args : stdenvNoCC.mkDerivation rec {
+  }@args : stdenvNoCC.mkDerivation (rec {
 
-    inherit pname version src;
+    inherit pname version src patches;
 
     propagatedBuildInputs = [ jdk clojure ] ++ deps;
 
     buildPhase = ''
       mkdir classes
       export CLASSPATH=$CLASSPATH:${path}
-echo $CLASSPATH
       java clojure.main -e "(compile '${ns})"
     '';
 
@@ -29,7 +29,7 @@ echo $CLASSPATH
       (cd ${path}; jar -cf $out/share/java/${pname}-${version}.jar *)
       (cd classes; jar -uf $out/share/java/${pname}-${version}.jar *)
     '';
-  } // args;
+  } // args);
 
   toolsGitlibs = buildClojureLibrary rec {
     pname = "tools.gitlibs";
@@ -121,7 +121,49 @@ echo $CLASSPATH
     };
     path = "src/main/clojure";
     ns = "clojure.tools.deps.alpha";
-    deps = [  ];
+    deps = jars ++ [
+      dataXml
+      toolsCli
+      toolsGitlibs
+      coreAsync
+      toolsLogging
+      coreMemoize
+      toolsAnalyzer
+      toolsReader
+      toolsAnalyzerJvm
+      coreCache
+      dataPriorityMap
+      awsApi
+    ];
+  };
+ 
+  jars = map fetchMavenArtifact (builtins.fromJSON (builtins.readFile ./jars.json));
+
+  toolsBuild = buildClojureLibrary rec {
+    pname = "tools.build";
+    version = "v0.8.1";
+    src = fetchFromGitHub {
+      owner = "clojure";
+      repo = pname;
+      rev = version;
+      hash = "sha256-nuPBuNQ4su6IAh7rB9kX/Iwv5LsV+FOl/uHro6VcL7c=";
+    };
+    path = "src/main/clojure";
+    ns = "clojure.tools.build.api";
+    deps = [ toolsDepsAlpha toolsNamespace ];
+  };
+  
+  toolsNamespace = buildClojureLibrary rec {
+    pname = "tools.namespace";
+    version = "v1.3.0";
+    src = fetchFromGitHub {
+      owner = "clojure";
+      repo = pname;
+      rev = version;
+      hash = "sha256-vsUEFuXYrfhruhfEyBHQmYaEV1lSzjFzvdHizgp8IWw=";
+    };
+    path = "src/main/clojure";
+    ns = "clojure.tools.namespace";
   };
 
   dataXml = buildClojureLibrary rec {
@@ -225,5 +267,33 @@ echo $CLASSPATH
     hash = "sha256-udT+TXGTjfOIOfDspCqqpkz4sxPWeNoDbwyzyhmbR/U=";
   };
 
+  javaClasspath = buildClojureLibrary rec {
+    pname = "java.classpath";
+    version = "1.1.0";
+    src = fetchFromGitHub {
+      owner = "clojure";
+      repo = pname;
+      rev = "c93196693a1705421d88c30120fb773941414c90";
+      hash = "sha256-kguqLNmxt1aZggExnIrkEbRpDtufjsMFalOnsB+rlzU=";
+    };
+    path = "src/main/clojure";
+    ns = "clojure.java.classpath";
+  };
 
-in toolsDepsAlpha
+  brewInstall = buildClojureLibrary {
+    pname = "exec";
+    version = clojure.version;
+    src = fetchFromGitHub {
+      owner = "clojure";
+      repo = "brew-install";
+      rev = clojure.version;
+      hash = "sha256-Au5Yu9qgIyL5dDV3vHm8FdXjjnJsKgB8UmqUYF4z9tc=";
+    };
+    path = "src/main/clojure";
+    ns = "clojure.run.exec";
+  };
+
+  
+
+
+in brewInstall

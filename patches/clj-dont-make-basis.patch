@@ -1,0 +1,38 @@
+--- a/script/build.clj
++++ b/script/build.clj
+@@ -4,10 +4,15 @@
+     [clojure.tools.build.api :as b]))
+ 
+ ;; project config
++(println "HELLO")
+ (def lib 'org.clojure/clojure-tools)
++(println "1")
+ (def version (str/trim (slurp "VERSION")))
+-(def basis (b/create-basis {}))
+-(def clojure-ver (get-in basis [:libs 'org.clojure/clojure :mvn/version]))
++(println "2")
++(def basis {});(b/create-basis {:project nil}))
++(println "3")
++(def clojure-ver "1.11.1")
++(println "4")
+ (def stable (str/split (str/trim (slurp "stable.properties")) #" "))
+ 
+ ;; dirs
+@@ -37,7 +42,7 @@
+                :replace {"${project.version}" version
+                          "${version.short}" (str/replace version "." "")
+                          "${clojure.version}" clojure-ver
+-                         "${tools.deps.version}" (get-in basis [:libs 'org.clojure/tools.deps.alpha :mvn/version])
++                         "${tools.deps.version}" "1.0.0"
+                          "${stable.version}" (first stable)
+                          "${stable.sha}" (second stable)}})
+ 
+@@ -78,3 +83,5 @@
+         version-recipe (slurp (str filtered-dir "/clojure/install/clojure@version.rb"))]
+     (b/write-file {:path "target/clojure.rb" :string (str/replace brew-recipe "SHA" sha)})
+     (b/write-file {:path (format "target/clojure@%s.rb" version) :string (str/replace version-recipe "SHA" sha)})))
++
++(release nil)
+\ No newline at end of file
+
+Diff finished.  Thu Nov 10 00:00:36 2022

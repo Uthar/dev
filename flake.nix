@@ -9,12 +9,15 @@
     flake-utils.lib.eachDefaultSystem (system:
     let
       pkgs = nixpkgs.outputs.legacyPackages.${system};
+      pkgsMusl = nixpkgs.outputs.legacyPackages.${system}.pkgsMusl;
       nix-pkg = nix.packages.${system}.default;
     in {
       packages = rec {
         jdk = pkgs.jdk17;
         clojure = pkgs.callPackage ./clojure.nix { inherit jdk ant; };
+        ecl = pkgs.callPackage ./ecl.nix {};
         sbcl = pkgs.callPackage ./sbcl.nix {};
+        sbclStatic = pkgsMusl.callPackage ./sbcl.nix {};
         emacs = pkgs.callPackage ./emacs.nix { inherit sqlite; };
         ant = pkgs.callPackage ./ant.nix { inherit jdk; };
         fd = pkgs.callPackage ./fd.nix {};
@@ -25,6 +28,7 @@
         openssl_1_0_0 = pkgs.callPackage ./openssl_1_0_0.nix {};
         nix = pkgs.callPackage ./nix.nix { nix = nix-pkg; };
         deps = pkgs.callPackage ./deps.nix { inherit jdk clojure; };
+        cmucl = pkgs.callPackage ./cmucl.nix { };
       };
     });
 
