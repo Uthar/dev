@@ -8,7 +8,7 @@ let
     ,version
     ,src
     ,path ? "src"
-    ,ns ? pname
+    ,ns ? [ pname ]
     ,deps ? []
     ,patches ? []
     , ...
@@ -20,14 +20,14 @@ let
 
     buildPhase = ''
       mkdir classes
-      export CLASSPATH=$CLASSPATH:${path}
-      java clojure.main -e "(compile '${ns})"
+      export CLASSPATH=$CLASSPATH:${src}/${path}
+      java clojure.main -e "(doseq [ns '(${toString ns})] (compile ns))"
     '';
 
     installPhase = ''
       mkdir -p $out/share/java
-      (cd ${path}; jar -cf $out/share/java/${pname}-${version}.jar *)
-      (cd classes; jar -uf $out/share/java/${pname}-${version}.jar *)
+      # (cd ${path}; jar -cf $out/share/java/${pname}-${version}.jar *)
+      (cd classes; jar -cf $out/share/java/${pname}-${version}.jar *)
     '';
   } // args);
 
@@ -41,7 +41,7 @@ let
       hash = "sha256-86QCuNTm5i8odZZgiehzRnXtpC8lKcybgq+rMVw6DLU=";
     };
     path = "src/main/clojure";
-    ns = "clojure.tools.gitlibs";
+    ns = [ "clojure.tools.gitlibs" ];
   };
 
   toolsCli = buildClojureLibrary rec {
@@ -54,7 +54,7 @@ let
       hash = "sha256-ocd5ACZXF3uqRn1RPN6rHD19unP3mTYyAIZC0jhD4gA=";
     };
     path = "src/main/clojure";
-    ns = "clojure.tools.cli";
+    ns = [ "clojure.tools.cli" ];
   };
 
   toolsLogging = buildClojureLibrary rec {
@@ -67,7 +67,7 @@ let
       hash = "sha256-6vwtlT90GzEdnhhcdEJpBd0fJVL/2hx9+19VVY4OlO0=";
     };
     path = "src/main/clojure";
-    ns = "clojure.tools.logging";
+    ns = [ "clojure.tools.logging" ];
   };
   
   toolsReader = buildClojureLibrary rec {
@@ -80,7 +80,7 @@ let
       hash = "sha256-SICGhCl9bMIQ5b6GBlGpHvNLLdzSPNSUeOVrTwTAmGU=";
     };
     path = "src/main/clojure";
-    ns = "clojure.tools.reader";
+    ns = [ "clojure.tools.reader" ];
   };
 
   toolsAnalyzer = buildClojureLibrary rec {
@@ -93,7 +93,19 @@ let
       hash = "sha256-cAegZdNIQa43RZIoPTfRmUY64tpkUA6FmeOPrVbvj6U=";
     };
     path = "src/main/clojure";
-    ns = "clojure.tools.analyzer";
+    ns = [
+      "clojure.tools.analyzer"
+      "clojure.tools.analyzer.ast"
+      "clojure.tools.analyzer.passes"
+      "clojure.tools.analyzer.passes.trim"
+      "clojure.tools.analyzer.passes.warn-earmuff"
+      "clojure.tools.analyzer.passes.uniquify"
+      "clojure.tools.analyzer.passes.add-binding-atom"
+      "clojure.tools.analyzer.passes.cleanup"
+      "clojure.tools.analyzer.passes.constant-lifter"
+      "clojure.tools.analyzer.passes.emit-form"
+      "clojure.tools.analyzer.passes.source-info"
+    ];
   };
 
   toolsAnalyzerJvm = buildClojureLibrary rec {
@@ -106,7 +118,10 @@ let
       hash = "sha256-ecWRFtfjn0mpIjsJEJ/iDuiQlXzJuQtaoSgYotx+e8U=";
     };
     path = "src/main/clojure";
-    ns = "clojure.tools.analyzer.jvm";
+    ns = [
+      "clojure.tools.analyzer.jvm"
+      "clojure.tools.analyzer.passes.jvm.annotate-loops"
+    ];
     deps = [ toolsAnalyzer coreMemoize coreCache dataPriorityMap asm toolsReader ];
   };
 
@@ -120,7 +135,7 @@ let
       hash = "sha256-8Vh+L2BwABU9Gz34ySoGJ1IpIPfvoP1ZZdIllq2yDJ4=";
     };
     path = "src/main/clojure";
-    ns = "clojure.tools.deps.alpha";
+    ns = [ "clojure.tools.deps.alpha" ];
     deps = jars ++ [
       dataXml
       toolsCli
@@ -149,7 +164,7 @@ let
       hash = "sha256-nuPBuNQ4su6IAh7rB9kX/Iwv5LsV+FOl/uHro6VcL7c=";
     };
     path = "src/main/clojure";
-    ns = "clojure.tools.build.api";
+    ns = [ "clojure.tools.build.api" ];
     deps = [ toolsDepsAlpha toolsNamespace ];
   };
   
@@ -163,7 +178,7 @@ let
       hash = "sha256-vsUEFuXYrfhruhfEyBHQmYaEV1lSzjFzvdHizgp8IWw=";
     };
     path = "src/main/clojure";
-    ns = "clojure.tools.namespace";
+    ns = [ "clojure.tools.namespace" ];
   };
 
   dataXml = buildClojureLibrary rec {
@@ -176,7 +191,7 @@ let
       hash = "sha256-fRBd4eSAcJWtbIWGb0EyXJTywbLOicnlkaSP3RqJ69Y=";
     };
     path = "src/main/clojure";
-    ns = "clojure.data.xml";
+    ns = [ "clojure.data.xml" ];
   };
 
   dataJson = buildClojureLibrary rec {
@@ -189,7 +204,7 @@ let
       hash = "sha256-JQsLDr028FLfpZvtts0d2oLlaFBYjUc8gTdnYXyEo/c=";
     };
     path = "src/main/clojure";
-    ns = "clojure.data.json";
+    ns = [ "clojure.data.json" ];
   };
 
   dataPriorityMap = buildClojureLibrary rec {
@@ -202,7 +217,7 @@ let
       hash = "sha256-oE4f4xlp/Y+LfGVj92u5K9Dkm63JIB1zVXtQ8VJx1cQ=";
     };
     path = "src/main/clojure";
-    ns = "clojure.data.priority-map";
+    ns = [ "clojure.data.priority-map" ];
   };
   
   awsApi = buildClojureLibrary rec {
@@ -214,7 +229,7 @@ let
       rev = version;
       hash = "sha256-YDHyzDq9hDkfaSULqu1QKYz7QPuRPLFK2nZn0aQPcTQ=";
     };
-    ns = "cognitect.aws.client.api";
+    ns = [ "cognitect.aws.client.api" ];
     deps = [ dataXml dataJson toolsLogging coreAsync ];
   };
   
@@ -228,7 +243,7 @@ let
       hash = "sha256-1kY/aTli9CnyhXI0ZwT6wlLFfGRGayA/4QSK21sWjv8=";
     };
     path = "src/main/clojure";
-    ns = "clojure.core.async";
+    ns = [ "clojure.core.async" ];
     deps = [ toolsAnalyzerJvm ];
   };
   
@@ -242,7 +257,7 @@ let
       hash = "sha256-1ByBxHVTIqFHukEp9fk/eHQOWP3PP7KXaas5dzy9Ibc=";
     };
     path = "src/main/clojure";
-    ns = "clojure.core.cache";
+    ns = [ "clojure.core.cache" ];
     deps = [ dataPriorityMap ];
   };
 
@@ -256,7 +271,7 @@ let
       hash = "sha256-XvkjzRKB/gAN2nXcq9IEF6cwtX9DNlZft6UZjzcsiG4=";
     };
     path = "src/main/clojure";
-    ns = "clojure.core.memoize";
+    ns = [ "clojure.core.memoize" ];
     deps = [ coreCache dataPriorityMap ];
   };
 
@@ -277,7 +292,7 @@ let
       hash = "sha256-kguqLNmxt1aZggExnIrkEbRpDtufjsMFalOnsB+rlzU=";
     };
     path = "src/main/clojure";
-    ns = "clojure.java.classpath";
+    ns = [ "clojure.java.classpath" ];
   };
 
   brewInstall = buildClojureLibrary {
@@ -286,14 +301,12 @@ let
     src = fetchFromGitHub {
       owner = "clojure";
       repo = "brew-install";
-      rev = clojure.version;
-      hash = "sha256-Au5Yu9qgIyL5dDV3vHm8FdXjjnJsKgB8UmqUYF4z9tc=";
+      rev = "v1.11.1.1200";
+      hash = "sha256-a5ZhSDPnUgiPARhE8/Mn7yrH46gcv0rZTU0gVUCG0os=";
     };
     path = "src/main/clojure";
-    ns = "clojure.run.exec";
+    ns = [ "clojure.run.exec" ];
+    deps = [ toolsDepsAlpha ];
   };
 
-  
-
-
-in brewInstall
+in toolsBuild
