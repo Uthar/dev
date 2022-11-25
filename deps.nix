@@ -21,6 +21,8 @@ let
     buildPhase = ''
       mkdir classes
       export CLASSPATH=$CLASSPATH:${src}/${path}
+      find -name '*.java' > sources.txt
+      javac @sources.txt
       java clojure.main -e "(doseq [ns '(${toString ns})] (compile ns))"
     '';
 
@@ -309,4 +311,30 @@ let
     deps = [ toolsDepsAlpha ];
   };
 
-in toolsBuild
+  nrepl = buildClojureLibrary {
+    pname = "nrepl";
+    version = "1.0.0";
+    src = fetchFromGitHub {
+      owner = "nrepl";
+      repo = "nrepl";
+      rev = "1.0.0";
+      hash = "sha256-tCaLLVT7xtpxU8X+RzowoLsP8gp83XB8sVaFDwgO9OU=";
+    };
+    path = "src/clojure:src/java";
+    ns = [ "nrepl.cmdline" ];
+  };
+
+  # ciderNrepl = buildClojureLibrary {
+  #   pname = "cider-nrepl";
+  #   version = "0.28.7";
+  #   src = fetchFromGitHub {
+  #     owner = "clojure-emacs";
+  #     repo = "cider-nrepl";
+  #     rev = "v0.28.7";
+  #     hash = "sha256-4hAhBPBFbCRXzeJFVBy5wIIZqOSqtrMTdrrHVpJSW2I=";
+  #   };
+  #   ns = [ "cider.nrepl" ];
+  # }
+  
+
+in nrepl
