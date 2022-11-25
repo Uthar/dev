@@ -1,4 +1,4 @@
-{ pkgs, stdenvNoCC, ant, fetchFromGitHub, jdk, ... }:
+{ pkgs, stdenvNoCC, makeBinaryWrapper, ant, fetchFromGitHub, jdk, ... }:
 let
 
   spec = fetchFromGitHub {
@@ -29,7 +29,7 @@ in stdenvNoCC.mkDerivation rec {
 
   patches = [ ./patches/clojure-build-spec-dependencies.patch ];
 
-  buildInputs = [ ant jdk ];
+  buildInputs = [ ant jdk makeBinaryWrapper ];
 
   buildPhase = ''
     cp -r ${spec}/src/main/clojure/clojure/spec src/clj/clojure
@@ -38,8 +38,12 @@ in stdenvNoCC.mkDerivation rec {
   '';
 
   installPhase = ''
-    mkdir $out
-    cp -v clojure-${version}.jar $out
+    mkdir -p $out/share/java
+    mkdir -p $out/bin
+    cp -v clojure-${version}.jar $out/share/java
+    makeWrapper ${jdk}/bin/java $out/bin/clojure \
+      --prefix CLASSPATH : $out/share/java/clojure-${version}.jar \
+      --add-flags clojure.main
   '';
 
 }
