@@ -10,5 +10,10 @@ let
 in nix.overrideAttrs (o: {
   postPatch = (o.postPatch or "") + ''
     cp -v ${fossil-cc} src/libfetchers
+    substituteInPlace src/libmain/nix-main.pc.in --replace "-std=c++17" ""
+    substituteInPlace src/libcmd/nix-cmd.pc.in --replace "-std=c++17" ""
+    substituteInPlace src/libstore/nix-store.pc.in --replace "-std=c++17" ""
+    substituteInPlace src/libexpr/nix-expr.pc.in --replace "-std=c++17" ""
+    substituteInPlace Makefile --replace c++17 c++20
   '';
 })

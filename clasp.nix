@@ -1,4 +1,4 @@
-{ pkgs, lib, fetchFromGitHub, llvmPackages_14, ...}:
+{ pkgs, lib, fetchFromGitHub, llvmPackages_14, nix, ...}:
 
 
 let
@@ -6,8 +6,8 @@ let
   src = fetchFromGitHub {
     owner = "clasp-developers";
     repo = "clasp";
-    rev = "2.0.0";
-    hash = "sha256-McKEPnQ8PNm++KTvuEq6otpBp4oDvnPyS6NXI1Pi2Cg=";
+    rev = "ce81d67c5766e69df96dc3aee9f69387565cdc60";
+    hash = "sha256-b0ziKTwS11E4Nd0St3JwjoO9aImbLomKUUEipm3of/U=";
   };
 
   reposDirs = [
@@ -44,12 +44,12 @@ let
     '';
     outputHashMode = "flat";
     outputHashAlgo = "sha256";
-    outputHash = "sha256-3q8l7+FNytEZYADSV6FWgsNKX15dUJ6C6kKE/Blefbc=";
+    outputHash = "sha256-011140qCAtHJp2agtlQ4oZ0SQGmOLhVbNdfAQ3Naoo8=";
   };
 
 in llvmPackages_14.stdenv.mkDerivation { 
   pname = "clasp";
-  version = "2.0.0";  
+  version = "2.0.0-tip";  
   inherit src;
   nativeBuildInputs = (with pkgs; [
     sbcl
@@ -64,7 +64,9 @@ in llvmPackages_14.stdenv.mkDerivation {
   ]) ++ (with llvmPackages_14; [
     llvm
     libclang
-  ]);
+  ]) ++ [
+    nix
+  ];
   configurePhase = ''
     export SOURCE_DATE_EPOCH=1
     export ASDF_OUTPUT_TRANSLATIONS=$(pwd):$(pwd)/__fasls
