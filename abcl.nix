@@ -29,14 +29,6 @@ stdenvNoCC.mkDerivation rec {
     ./patches/abcl-gray-streams-element-type-binary.patch
   ];
 
-  javaOpts = [
-    "\$JAVA_OPTS"
-    "--add-opens=java.base=ALL"
-    (lib.optionalString
-      (lib.versionAtLeast jdk.version "17")
-      "--add-opens=java.base/java.util.jar=ALL-UNNAMED")
-  ];
-
   installPhase = ''
     mkdir -pv $out/share/java
     mkdir -pv $out/bin
