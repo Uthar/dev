@@ -24,7 +24,7 @@ stdenv.mkDerivation rec {
   '';
 
   buildPhase = ''
-    sh make.sh --prefix=$out --xc-host=${pkgs.sbclBootstrap}/bin/sbcl --fancy --without-sb-ldb
+    sh make.sh --prefix=$out --xc-host=${pkgs.sbclBootstrap}/bin/sbcl --fancy --without-sb-ldb --with-sb-linkable-runtime
     (cd doc/manual && make info)
   '';
 
