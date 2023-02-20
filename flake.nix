@@ -31,6 +31,21 @@
             jre_minimal
           ];
         };
+        jdk_musl = pkgs.pkgsMusl.jdk17.override {
+          headless = true;
+          enableJavaFX = false;
+          enableGnome2 = false;
+        };
+        jdk_musl_minimal = pkgs.pkgsMusl.jre_minimal.override {
+          jdk = jdk_musl;
+        };
+        jdk_musl_docker = pkgs.dockerTools.buildImage {
+          name = "jre";
+          tag = "musl";
+          contents = [
+            jdk_musl_minimal
+          ];
+        };
         clojure = pkgs.callPackage ./clojure.nix { inherit jdk ant; };
         cider = pkgs.callPackage ./cider.nix { inherit cljpkgs; };
         sbcl = pkgs.callPackage ./sbcl.nix {};
