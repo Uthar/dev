@@ -1,3 +1,4 @@
+
 {
 
   description = "Development environment";
@@ -15,6 +16,36 @@
     in {
       packages = rec {
         jdk = pkgs.jdk17;
+        jdk_minimal = pkgs.jdk17.override {
+          headless = true;
+          enableJavaFX = false;
+          enableGnome2 = false;
+        };
+        jre_minimal = pkgs.jre_minimal.override {
+          jdk = jdk_minimal;
+        };
+        jre_docker = pkgs.dockerTools.buildImage {
+          name = "jre";
+          tag = "latest";
+          contents = [
+            jre_minimal
+          ];
+        };
+        jdk_musl = pkgs.pkgsMusl.jdk17.override {
+          headless = true;
+          enableJavaFX = false;
+          enableGnome2 = false;
+        };
+        jdk_musl_minimal = pkgs.pkgsMusl.jre_minimal.override {
+          jdk = jdk_musl;
+        };
+        jdk_musl_docker = pkgs.dockerTools.buildImage {
+          name = "jre";
+          tag = "musl";
+          contents = [
+            jdk_musl_minimal
+          ];
+        };
         clojure = pkgs.callPackage ./clojure.nix { inherit jdk ant; };
         cider = pkgs.callPackage ./cider.nix { inherit cljpkgs; };
         sbcl = pkgs.callPackage ./sbcl.nix {};
