@@ -49,6 +49,21 @@
         clojure = pkgs.callPackage ./clojure.nix { inherit jdk ant; };
         cider = pkgs.callPackage ./cider.nix { inherit cljpkgs; };
         sbcl = pkgs.callPackage ./sbcl.nix {};
+        sbclMusl = pkgs.callPackage ./sbcl-musl.nix { inherit abcl; };
+        sbcl_docker = pkgs.dockerTools.buildImage {
+          name = "sbcl";
+          tag = "latest";
+          contents = [
+            sbcl
+          ];
+        };
+        sbcl_musl_docker = pkgs.dockerTools.buildImage {
+          name = "sbcl";
+          tag = "musl";
+          contents = [
+            sbclMusl
+          ];
+        };
         emacs = pkgs.callPackage ./emacs.nix { inherit sqlite; };
         ant = pkgs.callPackage ./ant.nix { inherit jdk; };
         fd = pkgs.callPackage ./fd.nix {};
