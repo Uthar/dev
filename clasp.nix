@@ -1,4 +1,4 @@
-{ pkgs, lib, fetchFromGitHub, llvmPackages_14, ...}:
+{ pkgs, lib, fetchFromGitHub, llvmPackages_15, ...}:
 
 
 let
@@ -6,8 +6,8 @@ let
   src = fetchFromGitHub {
     owner = "clasp-developers";
     repo = "clasp";
-    rev = "2.0.0";
-    hash = "sha256-McKEPnQ8PNm++KTvuEq6otpBp4oDvnPyS6NXI1Pi2Cg=";
+    rev = "2.2.0";
+    hash = "sha256-gvUqUb0dftW1miiBcAPJur0wOunox4y2SUYeeJpR9R4=";
   };
 
   reposDirs = [
@@ -19,7 +19,7 @@ let
     "src/libatomic_ops"
   ];
 
-  reposTarball = llvmPackages_14.stdenv.mkDerivation {
+  reposTarball = llvmPackages_15.stdenv.mkDerivation {
     pname = "clasp-repos";
     version = "tarball";
     inherit src;
@@ -44,12 +44,12 @@ let
     '';
     outputHashMode = "flat";
     outputHashAlgo = "sha256";
-    outputHash = "sha256-3q8l7+FNytEZYADSV6FWgsNKX15dUJ6C6kKE/Blefbc=";
+    outputHash = "sha256-vgwThjn2h3nKnShtKoHgaPdH/FDHv28fLMQvKFEwG6o=";
   };
 
-in llvmPackages_14.stdenv.mkDerivation { 
+in llvmPackages_15.stdenv.mkDerivation { 
   pname = "clasp";
-  version = "2.0.0";  
+  version = "2.2.0";  
   inherit src;
   nativeBuildInputs = (with pkgs; [
     sbcl
@@ -61,7 +61,7 @@ in llvmPackages_14.stdenv.mkDerivation {
     boost
     libunwind
     ninja
-  ]) ++ (with llvmPackages_14; [
+  ]) ++ (with llvmPackages_15; [
     llvm
     libclang
   ]);
