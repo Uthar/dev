@@ -1,4 +1,4 @@
-{ pkgs, lib, fetchFromGitHub, llvmPackages_15, ...}:
+{ pkgs, lib, fetchFromGitHub, llvmPackages_15, nix, ...}:
 
 
 let
@@ -50,7 +50,7 @@ let
 in llvmPackages_15.stdenv.mkDerivation { 
   pname = "clasp";
   version = "2.2.0";  
-  inherit src;
+  inherit src reposTarball;
   nativeBuildInputs = (with pkgs; [
     sbcl
     git
@@ -64,13 +64,16 @@ in llvmPackages_15.stdenv.mkDerivation {
   ]) ++ (with llvmPackages_15; [
     llvm
     libclang
-  ]);
+  ]) ++ [
+    nix
+  ];
   configurePhase = ''
     export SOURCE_DATE_EPOCH=1
     export ASDF_OUTPUT_TRANSLATIONS=$(pwd):$(pwd)/__fasls
     tar xf ${reposTarball}
     sbcl --script koga \
       --skip-sync \
+      --extensions=nix \
       --cc=$NIX_CC/bin/cc \
       --cxx=$NIX_CC/bin/c++ \
       --reproducible-build \

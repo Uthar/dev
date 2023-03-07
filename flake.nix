@@ -4,7 +4,7 @@
   description = "Development environment";
 
   inputs.nixpkgs.url = "nixpkgs";
-  inputs.nix.url = "nix/2.11.1";
+  inputs.nix.url = "nix/master";
   inputs.nix-clj.url = "github:uthar/nix-clj";
 
   outputs = { self, flake-utils, nixpkgs, nix, nix-clj }:
@@ -69,7 +69,7 @@
         fd = pkgs.callPackage ./fd.nix {};
         sqlite = pkgs.callPackage ./sqlite.nix {};
         fossil = pkgs.callPackage ./fossil.nix { inherit sqlite; };
-        clasp = pkgs.callPackage ./clasp.nix {};
+        clasp = pkgs.callPackage ./clasp.nix { inherit nix; };
         abcl = pkgs.callPackage ./abcl.nix { inherit jdk ant; };
         openssl_1_0_0 = pkgs.callPackage ./openssl_1_0_0.nix {};
         nix = pkgs.callPackage ./nix.nix { nix = nix-pkg; };
