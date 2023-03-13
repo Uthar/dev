@@ -64,6 +64,7 @@
             sbclMusl
           ];
         };
+        gcl = pkgs.callPackage ./gcl.nix {};
         emacs = pkgs.callPackage ./emacs.nix { inherit sqlite; };
         ant = pkgs.callPackage ./ant.nix { inherit jdk; };
         fd = pkgs.callPackage ./fd.nix {};
