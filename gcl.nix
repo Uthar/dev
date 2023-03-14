@@ -25,9 +25,13 @@ stdenv.mkDerivation {
     libtirpc
   ];
 
+  postPatch = ''
+    substituteInPlace makefile \
+      --replace '$(MAKE) -C $(PORTDIR) final' '$(MAKE) -C $(PORTDIR)'
+  '';
+
   configureFlags = [
     "--enable-ansi"
-    "--enable-xdr=no"
   ];
 
   NIX_CFLAGS_COMPILE = [
