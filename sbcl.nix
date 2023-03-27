@@ -1,4 +1,4 @@
-{ pkgs, stdenv, zstd, texinfo, fetchurl, ... }:
+{ pkgs, stdenv, zstd, texinfo, fetchurl, sqlite, ... }:
 
 stdenv.mkDerivation rec {
 
@@ -21,6 +21,9 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     echo '"${version}.kaspi"' > version.lisp-expr
+    echo -n 'LINKFLAGS+=-Wl,--whole-archive ' >> src/runtime/Config.x86-64-linux
+    echo -n '${sqlite}/lib/libsqlite3.a ' >> src/runtime/Config.x86-64-linux
+    echo '-Wl,--no-whole-archive' >> src/runtime/Config.x86-64-linux
   '';
 
   buildPhase = ''
