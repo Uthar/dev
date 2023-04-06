@@ -14,11 +14,11 @@ in emacs.overrideAttrs (o: {
   # Recent tip of trunk
   src = fetchFromSavannah {
     repo = "emacs";
-    rev = "3bdbb66efb9895b8ed55270075fa7d8329f8d36b";
-    hash = "sha256-NjzWCNDCDc94aDf6nmH0K4GNk/li+a2QAuwDMrPibrE=";
+    rev = "5ae0c16732450603efc1a0c900e5f2721a0f620b";
+    hash = "sha256-msG2dz7f3x6hxDonstkg2xa4E8YFjSc0+VRxji1lop0=";
   };
 
-  version = "29.0.60";
+  version = "30.0.50";
 
   configureFlags = o.configureFlags ++ [
     "--with-tree-sitter"
