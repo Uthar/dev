@@ -1,4 +1,4 @@
-{ pkgs, stdenv, fetchFromSavannah, ... }:
+{ pkgs, stdenv, fetchFromGitHub, ... }:
 
 stdenv.mkDerivation {
   pname = "gcl";
@@ -6,10 +6,11 @@ stdenv.mkDerivation {
 
   sourceRoot = "source/gcl";
   
-  src = fetchFromSavannah {
+  src = fetchFromGitHub {
+    owner = "Uthar";
     repo = "gcl";
-    rev = "26a7a50d3d2ac4bc27d082f7321d16dba2b920cf";
-    hash = "sha256-pKxLX1eiSjfs0aEggaaiQBbl8I9kp5gABUD8YjOM8ek=";
+    rev = "288f9d0b08b5a09ef483bd9c29a8ccfea0a80b29";
+    hash = "sha256-qExkff795m00r5gXjgWmD9wFWW+abVUPaGIerYsgQmQ=";
   };
 
   # breaks when compiling in parallel
@@ -24,11 +25,6 @@ stdenv.mkDerivation {
     readline
     libtirpc
   ];
-
-  postPatch = ''
-    substituteInPlace makefile \
-      --replace '$(MAKE) -C $(PORTDIR) final' '$(MAKE) -C $(PORTDIR)'
-  '';
 
   configureFlags = [
     "--enable-ansi"
