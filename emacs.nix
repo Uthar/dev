@@ -14,8 +14,8 @@ in emacs.overrideAttrs (o: {
   # Recent tip of trunk
   src = fetchFromSavannah {
     repo = "emacs";
-    rev = "f1ce49d148b334a8fb5302c4dd596aceffbb6b57";
-    hash = "sha256-YgUSY3Fi2lXsxO0gHKwuzuEshv+eCkckGlAbQjh9b4M=";
+    rev = "ad3ec429a12fb8caa460de5911145d1d3c46d626";
+    hash = "sha256-vM4p1Zbdxo4qTkdfoN5HVz/Z+xgkm6cRobM83XDbwNo=";
   };
 
   version = "30.0.50";
