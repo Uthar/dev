@@ -48,7 +48,11 @@
         };
         clojure = pkgs.callPackage ./clojure.nix { inherit jdk ant; };
         cider = pkgs.callPackage ./cider.nix { inherit cljpkgs; };
-        sbcl = pkgs.callPackage ./sbcl.nix { inherit sqlite; };
+        sbcl = pkgs.callPackage ./sbcl.nix { fat = false; };
+        sbclFat = pkgs.callPackage ./sbcl.nix {
+          inherit sqlite libuv;
+          fat = true;
+        };
         sbclMusl = pkgs.callPackage ./sbcl-musl.nix { inherit abcl; };
         sbcl_docker = pkgs.dockerTools.buildImage {
           name = "sbcl";
@@ -74,6 +78,10 @@
         abcl = pkgs.callPackage ./abcl.nix { inherit jdk ant; };
         openssl_1_0_0 = pkgs.callPackage ./openssl_1_0_0.nix {};
         nix = pkgs.callPackage ./nix.nix { nix = nix-pkg; };
+        libuv = pkgs.libuv.overrideAttrs (oa: {
+          dontDisableStatic = true;
+          doCheck = false;
+        });
       };
     });
 

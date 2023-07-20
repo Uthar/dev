@@ -1,4 +1,4 @@
-{ pkgs, stdenv, zstd, texinfo, fetchurl, sqlite, ... }:
+{ pkgs, lib, stdenv, zstd, texinfo, fetchurl, sqlite, libuv, fat, ... }:
 
 stdenv.mkDerivation rec {
 
@@ -21,10 +21,14 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     echo '"${version}.kaspi"' > version.lisp-expr
+  '' + (lib.optionalString fat ''
     echo -n 'LINKFLAGS+=-Wl,--whole-archive ' >> src/runtime/Config.x86-64-linux
     echo -n '${sqlite}/lib/libsqlite3.a ' >> src/runtime/Config.x86-64-linux
     echo '-Wl,--no-whole-archive' >> src/runtime/Config.x86-64-linux
-  '';
+    echo -n 'LINKFLAGS+=-Wl,--whole-archive ' >> src/runtime/Config.x86-64-linux
+    echo -n '${libuv}/lib/libuv.a ' >> src/runtime/Config.x86-64-linux
+    echo '-Wl,--no-whole-archive' >> src/runtime/Config.x86-64-linux
+  '');
 
   buildPhase = ''
     sh make.sh --prefix=$out --xc-host=${pkgs.sbclBootstrap}/bin/sbcl --fancy --without-sb-ldb --with-sb-linkable-runtime
