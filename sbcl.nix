@@ -4,7 +4,7 @@ stdenv.mkDerivation rec {
 
   pname = "sbcl";
 
-  version = "2.3.6";
+  version = "2.3.7";
 
   buildInputs = let
     zstd' = zstd.override { static = true; };
@@ -16,7 +16,7 @@ stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "mirror://sourceforge/project/sbcl/sbcl/${version}/sbcl-${version}-source.tar.bz2";
-    hash = "sha256-tEFMpNmnR06NiE19YyN+LynvRZ39WoSEJKnD+lUdGbk=";
+    hash = "sha256-aYFE+4BaMZGaYQ3pmauYOR1S62mK2qjKGbKPxu0Nmfc=";
   };
 
   postPatch = ''
