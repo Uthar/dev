@@ -82,6 +82,7 @@
           dontDisableStatic = true;
           doCheck = false;
         });
+        mg = pkgs.callPackage ./mg.nix {};
       };
     });
 
