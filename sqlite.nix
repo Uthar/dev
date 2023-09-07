@@ -2,11 +2,12 @@
 
 stdenv.mkDerivation rec {
   pname = "sqlite";
-  version = "3.41.2";
+  version = "3.43.0";
 
+  # https://sqlite.org/news.html
   src = fetchurl {
-    url = "https://sqlite.org/2023/sqlite-autoconf-3410200.tar.gz";
-    hash = "sha256-6YwQDdHaTjD6Rgdh2rfAuRpQt4XhZ/jFesxGUU+ulJk=";
+    url = "https://sqlite.org/2023/sqlite-autoconf-3430000.tar.gz";
+    hash = "sha256-SQCNvzr8BNTtyOz8NOTq0ZaXMDQpPJl62tL2PwF2KuE=";
   };
 
   buildInputs = [ zlib readline ];
