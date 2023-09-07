@@ -4,28 +4,21 @@ let
 
   emacs = pkgs.emacs.override {
     inherit sqlite;
-    withGTK2 = true;
     withSQLite3 = true;
-    nativeComp = false; # Takes too long
+    withTreeSitter = true;
+    withNativeCompilation = false; # Takes too long
   };
 
 in emacs.overrideAttrs (o: {
 
   # Recent tip of trunk
+  # https://git.savannah.gnu.org/cgit/emacs.git/log/
   src = fetchFromSavannah {
     repo = "emacs";
-    rev = "ad3ec429a12fb8caa460de5911145d1d3c46d626";
-    hash = "sha256-vM4p1Zbdxo4qTkdfoN5HVz/Z+xgkm6cRobM83XDbwNo=";
+    rev = "a412d3c46cc4e53a78793dd4e129918452516caa";
+    hash = "sha256-QyGZ4BBV2xBr5bElojC73a676ZzCmrLplAe6t9hMFZE=";
   };
 
   version = "30.0.50";
-
-  configureFlags = o.configureFlags ++ [
-    "--with-tree-sitter"
-  ];
-
-  nativeBuildInputs = o.nativeBuildInputs ++ [
-    tree-sitter
-  ];
 
 })
