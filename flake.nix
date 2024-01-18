@@ -7,14 +7,15 @@
   inputs.nix.url = "nix/2.11.1";
   inputs.nix-clj.url = "github:uthar/nix-clj";
 
-  outputs = { self, flake-utils, nixpkgs, nix, nix-clj }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs = { self, nixpkgs, nix, nix-clj }:
     let
-      pkgs = nixpkgs.outputs.legacyPackages.${system};
-      nix-pkg = nix.packages.${system}.default;
-      cljpkgs = nix-clj.packages.${system};
+      systems = ["x86_64-linux"];
     in {
-      packages = rec {
+      packages = nixpkgs.lib.genAttrs systems (system: let
+        pkgs = nixpkgs.outputs.legacyPackages.${system};
+        nix-pkg = nix.packages.${system}.default;
+        cljpkgs = nix-clj.packages.${system};
+      in rec {
         jdk = pkgs.jdk17;
         jdk_minimal = pkgs.jdk17.override {
           headless = true;
@@ -83,7 +84,7 @@
           doCheck = false;
         });
         mg = pkgs.callPackage ./mg.nix {};
-      };
-    });
+      });
+    };
 
 }
