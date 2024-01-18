@@ -1,60 +1,150 @@
-diff --git a/repos.sexp b/repos.sexp
-index 2b2459655..ad346d8e5 100644
 --- a/repos.sexp
 +++ b/repos.sexp
-@@ -7,15 +7,15 @@
+@@ -1,36 +1,36 @@
+-;;;; The order in this file should be
+-;;;;   1. dependencies/ - needed by the host
+-;;;;   2. src/lisp/kernel/contrib/ - needed by the clasp images
+-;;;;   3. src/lisp/modules/ - other lisp modules
+-;;;;   4. src/ - C/C++ dependencies for iclasp
+-;;;;   5. extensions/ - extensions and their dependencies
  ((:name :ansi-test
-   :repository "https://gitlab.common-lisp.net/yitzchak/ansi-test"
+   :repository "https://github.com/clasp-developers/ansi-test.git"
    :directory "dependencies/ansi-test/"
--  :branch "add-expected-failures")
-+  :commit "346cf2eb1133942054df8ce2125ed7e999b6d82b")
++  :commit "9f47f89de3a84017f6103e1309f4f07838b74b7f"
+   :branch "master")
   (:name :cl-bench
-   :repository "https://gitlab.common-lisp.net/ansi-test/cl-bench.git"
+   :repository "https://github.com/clasp-developers/cl-bench.git"
    :directory "dependencies/cl-bench/"
--  :branch "master")
-+  :commit "7d184b4ef2a6272f0e3de88f6c243edb20f7071a")
++  :commit "7d184b4ef2a6272f0e3de88f6c243edb20f7071a"
+   :branch "master")
   (:name :cl-who
    :repository "https://github.com/edicl/cl-who.git"
    :directory "dependencies/cl-who/"
--  :branch "master")
-+  :commit "07dafe9b351c32326ce20b5804e798f10d4f273d")
++  :commit "07dafe9b351c32326ce20b5804e798f10d4f273d"
+   :branch "master")
   (:name :quicklisp-client
    :repository "https://github.com/quicklisp/quicklisp-client.git"
    :directory "dependencies/quicklisp-client/"
-@@ -23,15 +23,15 @@
+-  :commit "version-2021-02-13")
++  :commit "8b63e00b3a2b3f96e24c113d7601dd03a128ce94")
   (:name :shasht
    :repository "https://github.com/yitzchak/shasht.git"
    :directory "dependencies/shasht/"
--  :branch "master")
-+  :commit "f38e866990c6b5381a854d63f7ea0227c87c2f6d")
++  :commit "27ba0a8842e103f2d575b3c8bbcfc19bd172d9ea"
+   :branch "master")
   (:name :trivial-do
    :repository "https://github.com/yitzchak/trivial-do.git"
    :directory "dependencies/trivial-do/"
--  :branch "master")
-+  :commit "a19f93227cb80a6bec8846655ebcc7998020bd7e")
++  :commit "a19f93227cb80a6bec8846655ebcc7998020bd7e"
+   :branch "master")
   (:name :trivial-gray-streams
    :repository "https://github.com/trivial-gray-streams/trivial-gray-streams.git"
-   :directory "dependencies/trivial-gray-streams/"
--  :branch "master")
-+  :commit "2b3823edbc78a450db4891fd2b566ca0316a7876")
+   :directory "src/lisp/kernel/contrib/trivial-gray-streams/"
++  :commit "f873865e192d43d2b29b595b9a75bc54a6b68107"
+   :branch "master")
   (:name :acclimation
    :repository "https://github.com/robert-strandh/Acclimation.git"
-   :directory "src/lisp/kernel/contrib/Acclimation/"
-@@ -128,7 +128,7 @@
-  (:name :lparallel
-   :repository "https://github.com/yitzchak/lparallel.git"
-   :directory "src/lisp/kernel/contrib/lparallel/"
--  :branch "fix-asdf-feature"
-+  :commit "9c98bf629328b27a5a3fbb7a637afd1db439c00f"
+@@ -39,7 +39,7 @@
+  (:name :alexandria
+   :repository "https://github.com/clasp-developers/alexandria.git"
+   :directory "src/lisp/kernel/contrib/alexandria/"
+-  :commit "v1.4")
++  :commit "49e82add16cb9f1ffa72c77cd687271247181ff3")
+  (:name :anaphora
+   :repository "https://github.com/spwhitton/anaphora.git"
+   :directory "src/lisp/kernel/contrib/anaphora/"
+@@ -85,7 +85,7 @@
+   :directory "src/lisp/kernel/contrib/bordeaux-threads/"
+   :commit "3d25cd01176f7c9215ebc792c78313cb99ff02f9"
    :extension :cando)
-  (:name :parser.common-rules
-   :repository "https://github.com/scymtym/parser.common-rules.git"
-@@ -152,7 +152,7 @@
-  (:name :trivial-features ; Needed both by the host and eclasp
-   :repository "https://github.com/yitzchak/trivial-features.git"
+- (:name :cffi ; TODO remove once cando-user no longer needs
++ (:name :cffi
+   :repository "https://github.com/cffi/cffi.git"
+   :directory "src/lisp/kernel/contrib/cffi/"
+   :commit "9c912e7b89eb09dd347d3ebae16e4dc5f53e5717"
+@@ -125,8 +125,8 @@
+  (:name :eclector
+   :repository "https://github.com/s-expressionists/Eclector.git"
+   :directory "src/lisp/kernel/contrib/Eclector/"
+-  :commit "0.9.0")
+- (:name :esrap ; Needed both by the host and eclasp
++  :commit "85b87e88aabe02498db00501f555e860624f10ed")
++ (:name :esrap
+   :repository "https://github.com/scymtym/esrap.git"
+   :directory "src/lisp/kernel/contrib/esrap/"
+   :commit "7588b430ad7c52f91a119b4b1c9a549d584b7064")
+@@ -140,7 +140,7 @@
+   :directory "src/lisp/kernel/contrib/let-plus/"
+   :commit "455e657e077235829b197f7ccafd596fcda69e30"
+   :extension :cando)
+- (:name :cl-netcdf ; TODO remove once cando-user no longer needs
++ (:name :cl-netcdf
+   :repository "https://github.com/clasp-developers/cl-netcdf.git"
+   :directory "src/lisp/kernel/contrib/cl-netcdf/"
+   :commit "eca665af19abc9791344e45bec81c8649fb2a9f8"
+@@ -165,25 +165,26 @@
+   :directory "src/lisp/kernel/contrib/plump/"
+   :commit "d8ddda7514e12f35510a32399f18e2b26ec69ddc"
+   :extension :cando)
+- (:name :split-sequence ; Needed both by the host and eclasp
++ (:name :split-sequence
+   :repository "https://github.com/sharplispers/split-sequence.git"
+   :directory "src/lisp/kernel/contrib/split-sequence/"
+   :commit "89a10b4d697f03eb32ade3c373c4fd69800a841a")
+- (:name :static-vectors ; TODO remove once cando-user no longer needs
++ (:name :static-vectors
+   :repository "https://github.com/sionescu/static-vectors.git"
+   :directory "src/lisp/kernel/contrib/static-vectors/"
+   :commit "87a447a8eaef9cf4fd1c16d407a49f9adaf8adad"
+   :extension :cando)
+- (:name :trivial-features ; Needed both by the host and eclasp
++ (:name :trivial-features
+   :repository "https://github.com/trivial-features/trivial-features.git"
    :directory "src/lisp/kernel/contrib/trivial-features/"
--  :branch "asdf-feature")
-+  :commit "0008ef4f3376fb76f63c35ecee6573d0d0f98d57")
++  :commit "d249a62aaf022902398a7141ae17217251fc61db"
+   :branch "master")
   (:name :trivial-garbage
    :repository "https://github.com/trivial-garbage/trivial-garbage.git"
    :directory "src/lisp/kernel/contrib/trivial-garbage/"
+   :commit "b3af9c0c25d4d4c271545f1420e5ea5d1c892427"
+   :extension :cando)
+- (:name :trivial-http ; Needed both by the host and eclasp
++ (:name :trivial-http
+   :repository "https://github.com/gwkkwg/trivial-http.git"
+   :directory "src/lisp/kernel/contrib/trivial-http/"
+   :commit "ca45656587f36378305de1a4499c308acc7a03af")
+@@ -192,17 +193,18 @@
+   :directory "src/lisp/kernel/contrib/trivial-indent/"
+   :commit "8d92e94756475d67fa1db2a9b5be77bc9c64d96c"
+   :extension :cando)
+- (:name :trivial-with-current-source-form ; Needed both by the host and eclasp
++ (:name :trivial-with-current-source-form
+   :repository "https://github.com/scymtym/trivial-with-current-source-form.git"
+   :directory "src/lisp/kernel/contrib/trivial-with-current-source-form/"
+   :commit "3898e09f8047ef89113df265574ae8de8afa31ac")
+- (:name :usocket ; Needed both by the host and eclasp
++ (:name :usocket
+   :repository "https://github.com/usocket/usocket.git"
+   :directory "src/lisp/kernel/contrib/usocket/"
+   :commit "7ad6582cc1ce9e7fa5931a10e73b7d2f2688fa81")
+  (:name :asdf
+   :repository "https://github.com/clasp-developers/asdf.git"
+   :directory "src/lisp/modules/asdf/"
++  :commit "615771b3d0ee6ebb158134769e88ba421c2ea7d1"
+   :branch "add-clasp-bytecode-support")
+  (:name :mps
+   :repository "https://github.com/Ravenbrook/mps.git"
+@@ -211,11 +213,11 @@
+  (:name :bdwgc
+   :repository "https://github.com/ivmai/bdwgc.git"
+   :directory "src/bdwgc/"
+-  :commit "v8.2.0")
++  :commit "036becee374b84fed5d56a6df3ae097b7cc0ff73")
+  (:name :libatomic_ops
+   :repository "https://github.com/ivmai/libatomic_ops.git"
+   :directory "src/libatomic_ops/"
+-  :commit "v7.6.12")
++  :commit "4b7d0b9036f9a645b03010dad1c7b7f86ea75772")
+  (:name :cando
+   :repository "https://github.com/cando-developers/cando.git"
+   :directory "extensions/cando/"

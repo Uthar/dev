@@ -3,21 +3,10 @@
 
 let
 
-  src = fetchFromGitHub {
-    owner = "clasp-developers";
-    repo = "clasp";
-    rev = "2.2.0";
-    hash = "sha256-gvUqUb0dftW1miiBcAPJur0wOunox4y2SUYeeJpR9R4=";
-  };
+  src = fetchFromGitHub
+    (builtins.fromJSON (builtins.readFile ./clasp-src.json));
 
-  reposDirs = [
-    "dependencies"
-    "src/lisp/kernel/contrib"
-    "src/lisp/modules/asdf"
-    "src/mps"
-    "src/bdwgc"
-    "src/libatomic_ops"
-  ];
+  reposDirs = import ./repos-dirs.nix;
 
   reposTarball = llvmPackages_15.stdenv.mkDerivation {
     pname = "clasp-repos";
@@ -44,12 +33,12 @@ let
     '';
     outputHashMode = "flat";
     outputHashAlgo = "sha256";
-    outputHash = "sha256-vgwThjn2h3nKnShtKoHgaPdH/FDHv28fLMQvKFEwG6o=";
+    outputHash = "sha256-6uyMMrvfHyz/RJDzlpVUl8yvCzxkBtf6gsivvOa5iA8=";
   };
 
 in llvmPackages_15.stdenv.mkDerivation { 
   pname = "clasp";
-  version = "2.2.0";  
+  version = "2.5.0-tip";
   inherit src;
   nativeBuildInputs = (with pkgs; [
     sbcl
@@ -71,6 +60,7 @@ in llvmPackages_15.stdenv.mkDerivation {
     tar xf ${reposTarball}
     sbcl --script koga \
       --skip-sync \
+      --build-mode=bytecode-faso \
       --cc=$NIX_CC/bin/cc \
       --cxx=$NIX_CC/bin/c++ \
       --reproducible-build \
