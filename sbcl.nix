@@ -4,7 +4,7 @@ stdenv.mkDerivation rec {
 
   pname = "sbcl";
 
-  version = "2.3.8";
+  version = "2.4.0";
 
   buildInputs = let
     zstd' = zstd.override { static = true; };
@@ -16,7 +16,7 @@ stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "mirror://sourceforge/project/sbcl/sbcl/${version}/sbcl-${version}-source.tar.bz2";
-    hash = "sha256-QhVxsqyRbli+jrzqXvSr+NeQKGPbah0KXvqVAK3KDSk=";
+    hash = "sha256-g9i3TwjSJUxZuXkLwfZp4JCZRXuIRyDs7L9F9LRtF3Y=";
   };
 
   postPatch = ''
@@ -31,7 +31,7 @@ stdenv.mkDerivation rec {
   '');
 
   buildPhase = ''
-    sh make.sh --prefix=$out --xc-host=${pkgs.sbclBootstrap}/bin/sbcl --fancy --without-sb-ldb --with-sb-linkable-runtime
+    sh make.sh --prefix=$out --xc-host=${pkgs.ecl}/bin/ecl --fancy --without-sb-ldb --with-sb-linkable-runtime
     (cd doc/manual && make info)
   '';
 
