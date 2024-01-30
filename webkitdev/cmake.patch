@@ -1,0 +1,54 @@
+diff --git a/Source/WebKit/PlatformWPE.cmake b/Source/WebKit/PlatformWPE.cmake
+index a9762edabbd6..a06e4f0b2f97 100644
+--- a/Source/WebKit/PlatformWPE.cmake
++++ b/Source/WebKit/PlatformWPE.cmake
+@@ -433,6 +433,7 @@ if (ENABLE_BUBBLEWRAP_SANDBOX)
+     list(APPEND WebKit_LIBRARIES Libseccomp::Libseccomp)
+ endif ()
+ 
++if (ENABLE_VIDEO OR ENABLE_WEB_AUDIO)
+ if (USE_GSTREAMER_FULL)
+     list(APPEND WebKit_SYSTEM_INCLUDE_DIRECTORIES
+         ${GSTREAMER_FULL_INCLUDE_DIRS}
+@@ -451,6 +452,7 @@ else ()
+         ${GSTREAMER_LIBRARIES}
+     )
+ endif ()
++endif()
+ 
+ if (USE_LIBDRM)
+     list(APPEND WebKit_SYSTEM_INCLUDE_DIRECTORIES
+diff --git a/Source/cmake/FindLibxkbcommon.cmake b/Source/cmake/FindLibxkbcommon.cmake
+index d9d685a58b70..f7cfd9fabc04 100644
+--- a/Source/cmake/FindLibxkbcommon.cmake
++++ b/Source/cmake/FindLibxkbcommon.cmake
+@@ -32,5 +32,5 @@ find_package(PkgConfig QUIET)
+ pkg_check_modules(LIBXKBCOMMON xkbcommon)
+ 
+ include(FindPackageHandleStandardArgs)
+-find_package_handle_standard_args(Libxkbcommon REQUIRED_VARS LIBXKBCOMMON_FOUND
+-                                  FOUND_VAR LIBXKBCOMMON_FOUND)
++find_package_handle_standard_args(Libxkbcommon
++                                  REQUIRED_VARS LIBXKBCOMMON_FOUND)
+diff --git a/Source/cmake/OptionsWPE.cmake b/Source/cmake/OptionsWPE.cmake
+index 3775b2d67ca8..bfda060c9037 100644
+--- a/Source/cmake/OptionsWPE.cmake
++++ b/Source/cmake/OptionsWPE.cmake
+@@ -11,7 +11,7 @@ endif ()
+ 
+ set(USER_AGENT_BRANDING "" CACHE STRING "Branding to add to user agent string")
+ 
+-find_package(ATK 2.16.0 REQUIRED)
++find_package(ATK REQUIRED)
+ find_package(ATKBridge REQUIRED)
+ find_package(Cairo 1.16.0 REQUIRED)
+ find_package(Fontconfig 2.13.0 REQUIRED)
+@@ -22,7 +22,7 @@ find_package(JPEG REQUIRED)
+ find_package(Epoxy 1.5.4 REQUIRED)
+ find_package(LibGcrypt 1.7.0 REQUIRED)
+ find_package(Libtasn1 REQUIRED)
+-find_package(Libxkbcommon 0.4.0 REQUIRED)
++find_package(Libxkbcommon REQUIRED)
+ find_package(LibXml2 2.8.0 REQUIRED)
+ find_package(PNG REQUIRED)
+ find_package(SQLite3 REQUIRED)
