@@ -15,10 +15,10 @@ in emacs.overrideAttrs (o: {
   # https://git.savannah.gnu.org/cgit/emacs.git/log/
   src = fetchFromSavannah {
     repo = "emacs";
-    rev = "5f5faad249747ce5bd4b7f2968f737206c136265";
-    hash = "sha256-VSyevS5yNBH3K2MEUWD17CFFBMZby5p2rdjbWLCZuQ0=";
+    rev = "d89e427852a63dbeed3d5e03d9deb2ae9a8e3e1b";
+    hash = "sha256-EMkmcli0bRXVkQygyRb7QoDPVpEyG+tnTf2v2foTLRg=";
   };
 
-  version = "30.0.50";
+  version = "30.1";
 
 })
