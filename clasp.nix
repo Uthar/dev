@@ -5,8 +5,6 @@ let
 
   config = builtins.fromJSON (builtins.readFile ./clasp.json);
 
-  src = fetchFromGitHub config.src;
-
   repos = map
     (r: r // { repo = pkgs.fetchgit (r.fetchgitArgs // { fetchSubmodules = false; }); })
     config.repos;
@@ -14,7 +12,7 @@ let
 in llvmPackages_15.stdenv.mkDerivation { 
   pname = "clasp";
   version = config.version;
-  inherit src;
+  src = fetchFromGitHub config.src;
   nativeBuildInputs = (with pkgs; [
     sbcl
     git
