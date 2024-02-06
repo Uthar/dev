@@ -3,42 +3,17 @@
 
 let
 
-  src = fetchFromGitHub
-    (builtins.fromJSON (builtins.readFile ./clasp-src.json));
+  config = builtins.fromJSON (builtins.readFile ./clasp.json);
 
-  reposDirs = import ./repos-dirs.nix;
+  src = fetchFromGitHub config.src;
 
-  reposTarball = llvmPackages_15.stdenv.mkDerivation {
-    pname = "clasp-repos";
-    version = "tarball";
-    inherit src;
-    patches = [ ./patches/clasp-pin-repos-commits.patch ];
-    nativeBuildInputs = with pkgs; [
-      sbcl
-      git
-      cacert
-    ];
-    buildPhase = ''
-      export SOURCE_DATE_EPOCH=1
-      export ASDF_OUTPUT_TRANSLATIONS=$(pwd):$(pwd)/__fasls
-      sbcl --script koga --help
-      for x in {${lib.concatStringsSep "," reposDirs}}; do
-        find $x -type d -name .git -exec rm -rvf {} \; || true
-      done
-    '';
-    installPhase = ''
-      tar --owner=0 --group=0 --numeric-owner --format=gnu \
-        --sort=name --mtime="@$SOURCE_DATE_EPOCH" \
-        -czf $out ${lib.concatStringsSep " " reposDirs}
-    '';
-    outputHashMode = "flat";
-    outputHashAlgo = "sha256";
-    outputHash = "sha256-6uyMMrvfHyz/RJDzlpVUl8yvCzxkBtf6gsivvOa5iA8=";
-  };
+  repos = map
+    (r: r // { repo = pkgs.fetchgit (r.fetchgitArgs // { fetchSubmodules = false; }); })
+    config.repos;
 
 in llvmPackages_15.stdenv.mkDerivation { 
   pname = "clasp";
-  version = "2.5.0-tip";
+  version = config.version;
   inherit src;
   nativeBuildInputs = (with pkgs; [
     sbcl
@@ -57,7 +32,8 @@ in llvmPackages_15.stdenv.mkDerivation {
   configurePhase = ''
     export SOURCE_DATE_EPOCH=1
     export ASDF_OUTPUT_TRANSLATIONS=$(pwd):$(pwd)/__fasls
-    tar xf ${reposTarball}
+    ${lib.concatMapStringsSep "\n" (r: "mkdir -p  ${r.directory}") repos}
+    ${lib.concatMapStringsSep "\n" (r: "cp -Tr ${r.repo} ${r.directory}") repos}
     sbcl --script koga \
       --skip-sync \
       --build-mode=bytecode-faso \

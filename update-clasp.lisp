@@ -1,6 +1,6 @@
 (load "~/quicklisp/setup.lisp")
 
-(ql:quickload '("alexandria" "bordeaux-threads" "cl-cpus"))
+(ql:quickload '("alexandria" "bordeaux-threads" "cl-cpus" "com.inuoe.jzon"))
 
 (defpackage clasp
   (:use :cl)
@@ -8,7 +8,8 @@
   (:import-from :cpus)
   (:local-nicknames
    (:a :alexandria)
-   (:bt :bordeaux-threads-2)))
+   (:bt :bordeaux-threads-2)
+   (:json :com.inuoe.jzon)))
 
 (in-package clasp)
 
@@ -124,45 +125,113 @@
             (push original sorted))))
     (reverse sorted)))
 
+(defun random-string (length)
+  (let ((string (make-string length)))
+    (dotimes (n length)
+      (do ((code (random 128) (random 128)))
+          ((alphanumericp (code-char code))
+           (setf (aref string n) (code-char code)))))
+    string))
+
+(defun update-repo-hash (repo)
+  (destructuring-bind (&key repository directory commit &allow-other-keys) repo
+    (let ((repo-with-hash (make-hash-table :test 'equal))
+          (clonedir (merge-pathnames                     
+                     (make-pathname :directory `(:relative ,(random-string 15)))
+                     (uiop:temporary-directory)))
+          (fetchgit-args (make-hash-table :test 'equal)))
+      (unwind-protect
+           (progn
+             (info "cloning" repository)
+             (shallow-checkout repository commit clonedir)
+             (setf (gethash "directory" repo-with-hash) directory)
+             (setf (gethash "url" fetchgit-args) repository)
+             (setf (gethash "rev" fetchgit-args)
+                   (uiop:run-program
+                    (list "git" "-C" (namestring clonedir)
+                          "rev-parse" "HEAD")
+                    :output '(:string :stripped t)))
+             (delete-dot-git clonedir)
+             (setf (gethash "hash" fetchgit-args)
+                   (uiop:run-program
+                    (list "nix" "hash" "path" (namestring clonedir))
+                    :output '(:string :stripped t)))
+             (setf (gethash "fetchgitArgs" repo-with-hash) fetchgit-args)
+             repo-with-hash)
+        (uiop:delete-directory-tree clonedir :validate (constantly t))))))
+
+(defun shallow-checkout (repository revision directory)
+  (uiop:run-program
+   (list "git" "init" (namestring directory)))
+  (uiop:run-program
+   (list "git" "-C" (namestring directory)
+         "fetch" "--depth" "1" repository revision))
+  (uiop:run-program
+   (list "git" "-C" (namestring directory) "checkout" "FETCH_HEAD")))
+
+(defun delete-dot-git (checkout)
+  (uiop:delete-directory-tree
+   (merge-pathnames (make-pathname :directory '(:relative ".git")) checkout)
+   :validate (constantly t)))
+
 (defun main ()
   (unless (string= (a:lastcar (pathname-directory (uiop:getcwd))) "dev")
     (error "Must run from 'dev' repo"))
-  (info "updating source hash")
-  (uiop:run-program
-   (list "nix-prefetch-github"
-         "clasp-developers"
-         "clasp")
-   :output "clasp-src.json")
-  (info "downloading latest repos.sexp")
-  (let ((tip (get-latest-commit
-              :repository "https://github.com/clasp-developers/clasp"
-              :branch "main"))
-        (url "https://raw.githubusercontent.com/clasp-developers/clasp/~a/repos.sexp"))
-    (uiop:run-program
-     (list "curl" "-LO" (format nil url tip))))
-  (let* ((original-path "repos.sexp")
+  (info "Checking out latest clasp")
+  (shallow-checkout
+   "https://github.com/clasp-developers/clasp.git"
+   "main"
+   (make-pathname :directory '(:relative "clasp-checkout")))
+  (let* ((original-path "clasp-checkout/repos.sexp")
          (all (read-repos-sexp original-path))
          ;; For now I only want to build the base clasp without extensions
          (build (remove-if (lambda (entry) 
                                (getf entry :extension))
                              all))
-         (dirs (mapcar (lambda (entry) (getf entry :directory)) build))
          (updated (update-commits build))
          (final (in-original-order all updated))
          (patch (gen-patch final original-path)))
-    (info "updating dirs")
-    (with-open-file (stream "repos-dirs.nix"
-                            :direction :output
-                            :if-exists :supersede)
-      (format stream "[~{~s~^~% ~}]~%" dirs))
     (info "updating pins")
     (with-open-file (stream "patches/clasp-pin-repos-commits.patch"
                             :direction :output
                             :if-exists :supersede)
       (write-string patch stream))
+    (info "updating dependency hashes")
+    (with-open-file (stream "clasp.json"
+                            :direction :output
+                            :if-exists :supersede)
+      (let ((config (make-hash-table :test 'equal))
+            (src (make-hash-table :test 'equal))
+            (repos (make-array (length updated)
+                               :adjustable t
+                               :fill-pointer 0))
+            (version (uiop:read-file-form "clasp-checkout/version.sexp")))
+        (setf (gethash "owner" src) "clasp-developers")
+        (setf (gethash "repo" src) "clasp")
+        (setf (gethash "rev" src)
+              (uiop:run-program
+               (list "git" "-C" "clasp-checkout"
+                     "rev-parse" "HEAD")
+               :output '(:string :stripped t)))
+        (delete-dot-git (make-pathname :directory '(:relative "clasp-checkout")))
+        (setf (gethash "hash" src)
+              (uiop:run-program
+               (list "nix" "hash" "path" "clasp-checkout")
+               :output '(:string :stripped t)))
+        (setf (gethash "src" config) src)
+        (setf (gethash "version" config) (getf version :version))
+        (setf (gethash "repos" config)
+              (stable-sort (map 'vector #'update-repo-hash updated)
+                           #'string<
+                           :key (lambda (r) (gethash "directory" r))))
+        (file-position stream 0)
+        (write-string (json:stringify config :pretty t) stream)
+        (fresh-line stream)))
     (info "done")
     (values)))
 
 (unwind-protect
      (main)
-  (ignore-errors (delete-file "repos.sexp")))
+  (ignore-errors (delete-file "repos.sexp"))
+  (ignore-errors
+   (uiop:delete-directory-tree (make-pathname :directory '(:relative "clasp-checkout")) :validate (constantly t))))
