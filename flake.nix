@@ -87,6 +87,7 @@
         mg = pkgs.callPackage ./mg.nix {};
         wpewebkit = pkgs.callPackage ./wpewebkit.nix {};
         wpebackend-fdo = wpebackends.fdo;
+        cog = pkgs.callPackage ./cog.nix { inherit wpewebkit wpebackend-fdo; };
       });
     };
 

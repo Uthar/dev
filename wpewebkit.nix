@@ -58,6 +58,7 @@ stdenv.mkDerivation rec {
     gperf
   ];
 
+  # TODO propagatedBuildInputs
   buildInputs = with pkgs; [
     atk
     cairo
