@@ -15,6 +15,7 @@
         pkgs = nixpkgs.outputs.legacyPackages.${system};
         nix-pkg = nix.packages.${system}.default;
         cljpkgs = nix-clj.packages.${system};
+        wpebackends = pkgs.callPackage ./wpebackends.nix {};
       in rec {
         jdk = pkgs.jdk17;
         jdk_minimal = pkgs.jdk17.override {
@@ -85,6 +86,7 @@
         });
         mg = pkgs.callPackage ./mg.nix {};
         wpewebkit = pkgs.callPackage ./wpewebkit.nix {};
+        wpebackend-fdo = wpebackends.fdo;
       });
     };
 
