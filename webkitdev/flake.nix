@@ -11,7 +11,10 @@
       default = pkgs.mkShell {
         # cmake -DPORT=WPE -DENABLE_WPE_PLATFORM_WAYLAND=OFF -DENABLE_BUBBLEWRAP_SANDBOX=OFF -DENABLE_VIDEO=OFF -DENABLE_WEB_AUDIO=OFF -DENABLE_WEBGL=OFF -GNinja
         # ninja
+        # See example backend: https://github.com/Igalia/WPEBackend-android
         packages = with pkgs; [
+          wayland
+          meson
           pkg-config
           cmake
           ninja
@@ -52,6 +55,9 @@
           libbacktrace
           gperf
           libGL
+          gst_all_1.gstreamer
+          gst_all_1.gst-plugins-base
+          gst_all_1.gst-plugins-bad
         ];
       };
     });

@@ -84,6 +84,7 @@
           doCheck = false;
         });
         mg = pkgs.callPackage ./mg.nix {};
+        wpewebkit = pkgs.callPackage ./wpewebkit.nix {};
       });
     };
 
