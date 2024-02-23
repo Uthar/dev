@@ -58,8 +58,7 @@ stdenv.mkDerivation rec {
     gperf
   ];
 
-  # TODO propagatedBuildInputs
-  buildInputs = with pkgs; [
+  propagatedBuildInputs = with pkgs; [
     atk
     cairo
     fontconfig

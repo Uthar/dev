@@ -30,43 +30,6 @@ stdenv.mkDerivation {
     wayland
     wayland-protocols
     makeWrapper
-
-    # TODO should be in propagatedBuildInputs of wpewebkit
-    atk
-    cairo
-    fontconfig
-    freetype
-    harfbuzzFull
-    icu
-    libjpeg
-    epoxy
-    libgcrypt
-    libgpg-error
-    libtasn1
-    libxkbcommon
-    libxml2
-    libpng
-    sqlite
-    unifdef
-    libwebp
-    libwpe
-    zlib
-    libsoup_3
-    libjxl
-    openjpeg
-    woff2
-    libxslt
-    libinput
-    udev
-    libavif
-    lcms2
-    libdrm
-    mesa.dev
-    libbacktrace
-    libGL
-    gst_all_1.gstreamer
-    gst_all_1.gst-plugins-base
-    gst_all_1.gst-plugins-bad
   ];
   configurePhase = ''
     meson setup -Dprefix=$out build
