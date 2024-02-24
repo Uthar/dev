@@ -88,6 +88,11 @@
         wpewebkit = pkgs.callPackage ./wpewebkit.nix {};
         wpebackend-fdo = wpebackends.fdo;
         cog = pkgs.callPackage ./cog.nix { inherit wpewebkit wpebackend-fdo; };
+        rlwrap = pkgs.rlwrap.overrideAttrs (oa: {
+          patches = oa.patches or [] ++ [
+            ./patches/rlwrap-work-in-emacs-term.patch
+          ];
+        });
       });
     };
 
