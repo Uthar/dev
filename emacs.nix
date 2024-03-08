@@ -15,8 +15,8 @@ in emacs.overrideAttrs (o: {
   # https://git.savannah.gnu.org/cgit/emacs.git/log/
   src = fetchFromSavannah {
     repo = "emacs";
-    rev = "d89e427852a63dbeed3d5e03d9deb2ae9a8e3e1b";
-    hash = "sha256-EMkmcli0bRXVkQygyRb7QoDPVpEyG+tnTf2v2foTLRg=";
+    rev = "345cdd7a70558cd47c2ab3e124e2352debaa57cb";
+    hash = "sha256-U+lS32TeDicfdbpiL2mEorWIcWM41hamugcwdtfRe90=";
   };
 
   version = "30.1";
