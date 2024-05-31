@@ -22,7 +22,8 @@
 (defun read-repos-sexp (&optional (path "repos.sexp"))
   "Read the repos.sexp file from a clasp git checkout"
   (with-open-file (stream path)
-    (read stream)))
+    (let ((*read-eval* nil))
+      (read stream))))
 
 (defun parse-ls-remote (string)
   "Parse the response of git ls-remote"
