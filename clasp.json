@@ -2,8 +2,8 @@
   "src": {
     "owner": "clasp-developers",
     "repo": "clasp",
-    "rev": "e248eb05a32fa962c5d72958ef5567c4c67455b6",
-    "hash": "sha256-hR+D/IDF0rHA2BE5480FB3u8196FgVFWqKTJNLS9BX8="
+    "rev": "192c54b16821a4a257ee9c4ae2340053358e03bd",
+    "hash": "sha256-KwpkXUtJPZfco7oNuS7LVhdaJAKPk9g3Ooz+AhqE16c="
   },
   "version": "2.5.0",
   "repos": [
@@ -27,8 +27,8 @@
       "directory": "dependencies/cl-who/",
       "fetchgitArgs": {
         "url": "https://github.com/edicl/cl-who.git",
-        "rev": "07dafe9b351c32326ce20b5804e798f10d4f273d",
-        "hash": "sha256-5T762W3qetAjXtHP77ko6YZR6w5bQ04XM6QZPELQu+U="
+        "rev": "819de0f9e250185ecef3511caf6aea6a25845a1c",
+        "hash": "sha256-TCJqLhQTtsAtUk1EBHJBGLs+L7M1TgXm4ecB3pLx180="
       }
     },
     {
@@ -147,8 +147,8 @@
       "directory": "src/lisp/kernel/contrib/trivial-gray-streams/",
       "fetchgitArgs": {
         "url": "https://github.com/trivial-gray-streams/trivial-gray-streams.git",
-        "rev": "f873865e192d43d2b29b595b9a75bc54a6b68107",
-        "hash": "sha256-qsUgKu1EEMxWRdWJGIy/PnOq9PC+syiaOyJ6xdLpTiI="
+        "rev": "a7ead683666849762ea657dac9137d693c5a4929",
+        "hash": "sha256-NXMvoSlMC/PyrKS0EVoGdempGZN6z3h0YRr102HBhkc="
       }
     },
     {
@@ -181,14 +181,6 @@
         "url": "https://github.com/clasp-developers/asdf.git",
         "rev": "615771b3d0ee6ebb158134769e88ba421c2ea7d1",
         "hash": "sha256-2hdyCYpjK9P5grVfrsvwUG4qe7EYoAQDee5LKJfIYCE="
-      }
-    },
-    {
-      "directory": "src/mps/",
-      "fetchgitArgs": {
-        "url": "https://github.com/Ravenbrook/mps.git",
-        "rev": "b8a05a3846430bc36c8200f24d248c8293801503",
-        "hash": "sha256-Zuc77cdap0xNYEqM8IkMQMUMY0f5QZ84uFmKgXjDXeA="
       }
     }
   ]

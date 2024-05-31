@@ -20,7 +20,7 @@
   (:name :cl-who
    :repository "https://github.com/edicl/cl-who.git"
    :directory "dependencies/cl-who/"
-+  :commit "07dafe9b351c32326ce20b5804e798f10d4f273d"
++  :commit "819de0f9e250185ecef3511caf6aea6a25845a1c"
    :branch "master")
   (:name :quicklisp-client
    :repository "https://github.com/quicklisp/quicklisp-client.git"
@@ -40,7 +40,7 @@
   (:name :trivial-gray-streams
    :repository "https://github.com/trivial-gray-streams/trivial-gray-streams.git"
    :directory "src/lisp/kernel/contrib/trivial-gray-streams/"
-+  :commit "f873865e192d43d2b29b595b9a75bc54a6b68107"
++  :commit "a7ead683666849762ea657dac9137d693c5a4929"
    :branch "master")
   (:name :acclimation
    :repository "https://github.com/robert-strandh/Acclimation.git"
@@ -113,7 +113,7 @@
    :repository "https://github.com/gwkkwg/trivial-http.git"
    :directory "src/lisp/kernel/contrib/trivial-http/"
    :commit "ca45656587f36378305de1a4499c308acc7a03af")
-@@ -192,17 +193,18 @@
+@@ -192,26 +193,27 @@
    :directory "src/lisp/kernel/contrib/trivial-indent/"
    :commit "8d92e94756475d67fa1db2a9b5be77bc9c64d96c"
    :extension :cando)
@@ -132,9 +132,6 @@
    :directory "src/lisp/modules/asdf/"
 +  :commit "615771b3d0ee6ebb158134769e88ba421c2ea7d1"
    :branch "add-clasp-bytecode-support")
-  (:name :mps
-   :repository "https://github.com/Ravenbrook/mps.git"
-@@ -211,11 +213,11 @@
   (:name :bdwgc
    :repository "https://github.com/ivmai/bdwgc.git"
    :directory "src/bdwgc/"
