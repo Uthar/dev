@@ -1,6 +1,6 @@
-(load "~/quicklisp/setup.lisp")
+(load (sb-ext:posix-getenv "ASDF"))
 
-(ql:quickload '("alexandria" "bordeaux-threads" "cl-cpus" "com.inuoe.jzon"))
+(mapc #'asdf:load-system '("alexandria" "bordeaux-threads" "cl-cpus" "com.inuoe.jzon"))
 
 (defpackage clasp
   (:use :cl)

@@ -11,6 +11,16 @@
     let
       systems = ["x86_64-linux"];
     in {
+      devShells = nixpkgs.lib.genAttrs systems (system: let
+        pkgs = nixpkgs.outputs.legacyPackages.${system};
+        sbcl' = pkgs.sbcl.withPackages (ps: with ps; [
+          alexandria bordeaux-threads cl-cpus jzon
+        ]);
+      in {
+        default = pkgs.mkShell {
+          packages = [ sbcl' ];
+        };
+      });
       packages = nixpkgs.lib.genAttrs systems (system: let
         pkgs = nixpkgs.outputs.legacyPackages.${system};
         nix-pkg = nix.packages.${system}.default;
