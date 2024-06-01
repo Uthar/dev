@@ -1,4 +1,4 @@
-{ lib, stdenvNoCC, fetchzip, ant, jdk, hostname, makeWrapper }:
+{ lib, stdenvNoCC, fetchzip, ant, jdk, hostname }:
 
 stdenvNoCC.mkDerivation rec {
   pname = "abcl";
@@ -9,7 +9,7 @@ stdenvNoCC.mkDerivation rec {
     hash = "sha256-d6DXqXfgu/L/WfoB3p4cG7Lk8higalVcCshy6XwmoL0=";
   };
 
-  buildInputs = [ ant jdk hostname makeWrapper ];
+  buildInputs = [ ant jdk hostname ];
 
   buildPhase = ''
     ant \
