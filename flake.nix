@@ -80,7 +80,7 @@
             sbclMusl
           ];
         };
-        gcl = pkgs.callPackage ./gcl.nix {};
+        gcl = pkgs.callPackage ./gcl.nix { inherit (pkgs.xorg) libXaw libXmu; };
         emacs = pkgs.callPackage ./emacs.nix { inherit sqlite; };
         ant = pkgs.callPackage ./ant.nix { inherit jdk; };
         fd = pkgs.callPackage ./fd.nix {};
