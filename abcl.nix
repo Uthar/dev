@@ -9,7 +9,9 @@ stdenvNoCC.mkDerivation rec {
     hash = "sha256-d6DXqXfgu/L/WfoB3p4cG7Lk8higalVcCshy6XwmoL0=";
   };
 
-  buildInputs = [ ant jdk hostname ];
+  nativeBuildInputs = [ ant hostname ];
+  
+  buildInputs = [ jdk ];
 
   buildPhase = ''
     ant \
