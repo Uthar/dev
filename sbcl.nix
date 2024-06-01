@@ -1,10 +1,10 @@
-{ pkgs, lib, stdenv, zstd, texinfo, fetchurl, sqlite, libuv, fat, ... }:
+{ pkgs, lib, stdenv, zstd, texinfo, fetchzip, sqlite, libuv, fat, ... }:
 
 stdenv.mkDerivation rec {
 
   pname = "sbcl";
 
-  version = "2.4.0";
+  version = "2.4.5";
 
   buildInputs = let
     zstd' = zstd.override { static = true; };
@@ -14,9 +14,9 @@ stdenv.mkDerivation rec {
     texinfo
   ];
 
-  src = fetchurl {
+  src = fetchzip {
     url = "mirror://sourceforge/project/sbcl/sbcl/${version}/sbcl-${version}-source.tar.bz2";
-    hash = "sha256-g9i3TwjSJUxZuXkLwfZp4JCZRXuIRyDs7L9F9LRtF3Y=";
+    hash = "sha256-TsZPB3CPbLYokt43McHRhdCofJiLgLlVrazIPIJSvow=";
   };
 
   postPatch = ''
