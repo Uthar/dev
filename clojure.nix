@@ -29,7 +29,7 @@ in stdenvNoCC.mkDerivation rec {
 
   patches = [ ./patches/clojure-build-spec-dependencies.patch ];
 
-  buildInputs = [ ant jdk ];
+  nativeBuildInputs = [ ant jdk ];
 
   buildPhase = ''
     cp -r ${spec}/src/main/clojure/clojure/spec src/clj/clojure
