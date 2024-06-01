@@ -4,27 +4,27 @@ let
   spec = fetchFromGitHub {
     owner = "clojure";
     repo = "spec.alpha";
-    rev = "v0.3.218";
-    sha256 = "02dl34msr55s1rc4ggj7r4frggzr93dbam4082y3h5y2gcibfac6";
+    rev = "v0.5.238";
+    hash = "sha256-aIZPqKKO/OEmpJHe7VZsdqZF347IaqbPB7vkLQShncw=";
   };
 
   coreSpecs = fetchFromGitHub {
     owner = "clojure";
     repo = "core.specs.alpha";
-    rev = "v0.2.62";
-    sha256 = "1nfqwxf2in6jkfvsd9is2zwls2izfz0r942iflwlrzzr6ba1279d";
+    rev = "v0.4.74";
+    hash = "sha256-VqBSQFjidH4f4cQ2wFseIjKO/UoO2tim4vN3vOPwxUk=";
   };
 
 in stdenvNoCC.mkDerivation rec {
 
   pname = "clojure";
-  version = "1.11.1";
+  version = "1.11.3";
 
   src = fetchFromGitHub {
     owner = "clojure";
     repo = "clojure";
     rev = "clojure-${version}";
-    sha256 = "1xbab21rm9zvhmw1i2h5lqm7612vrdkxprq0rgb2i3sbgsxcdsn4";
+    hash = "sha256-gfFPV57TNTPVHsGi2wJOvm/BubXoTy3IUpanwWv7KuY=";
   };
 
   patches = [ ./patches/clojure-build-spec-dependencies.patch ];
