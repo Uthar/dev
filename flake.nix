@@ -4,7 +4,7 @@
   description = "Development environment";
 
   inputs.nixpkgs.url = "nixpkgs";
-  inputs.nix.url = "nix/2.11.1";
+  inputs.nix.url = "nix/2.22.1";
   inputs.nix-clj.url = "github:uthar/nix-clj";
 
   outputs = { self, nixpkgs, nix, nix-clj }:
