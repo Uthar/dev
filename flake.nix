@@ -103,6 +103,7 @@
             ./patches/rlwrap-work-in-emacs-term.patch
           ];
         });
+        lem = pkgs.callPackage ./lem.nix {};
       });
     };
 
