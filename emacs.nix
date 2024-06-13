@@ -1,25 +1,41 @@
-{ pkgs, fetchFromSavannah, sqlite, tree-sitter, ... }:
+{ pkgs, lib, stdenv, fetchFromSavannah, sqlite, tree-sitter, libgccjit, ... }:
 
 let
 
-  emacs = pkgs.emacs.override {
-    inherit sqlite;
-    withGTK2 = true;
-    withSQLite3 = true;
-    withTreeSitter = true;
-    withNativeCompilation = false; # Takes too long
-  };
-
-in emacs.overrideAttrs (o: {
-
+  jitFlags = lib.concatMapStringsSep " " (x: "\"-B${x}\"") [
+    "${lib.getLib libgccjit}/lib"
+    "${lib.getLib libgccjit}/lib/gcc"
+    "${lib.getLib stdenv.cc.libc}/lib"
+    "${lib.getLib stdenv.cc.cc.libgcc}/lib"
+    "${lib.getBin stdenv.cc.cc}/bin"
+    "${lib.getBin stdenv.cc.bintools}/bin"
+    "${lib.getBin stdenv.cc.bintools.bintools}/bin"
+  ];
+  
   # Recent tip of trunk
   # https://git.savannah.gnu.org/cgit/emacs.git/log/
   src = fetchFromSavannah {
     repo = "emacs";
-    rev = "0cb511b33bc96fc30d8e5286a474b4eea54817e3";
-    hash = "sha256-FCrVTAsehw+oPvMnXFXr2CHFFnk6Rw3zoucvY4f2Pq8=";
+    rev = "94bcd7964bbb20bc8ff8a91a9656452a97139d60";
+    hash = "sha256-Ka6x1Zc8P/yxRWXSVXS0gEBOAZK7L4uF6Uz+CEcubk4=";
   };
 
+  siteStart = pkgs.writeText "site-lisp.el" ''
+    (setq native-comp-driver-options '(${jitFlags}))
+    (setq find-function-C-source-directory "${src}/src")
+  '';
+    
+  emacs = pkgs.emacs.override {
+    inherit sqlite;
+    inherit siteStart;
+    withGTK2 = true;
+    withSQLite3 = true;
+    withTreeSitter = true;
+    withNativeCompilation = true; # Takes too long
+  };
+  
+in emacs.overrideAttrs (o: {
+  inherit src;
+  patches = [];
   version = "30.0.50";
-
 })
