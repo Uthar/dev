@@ -39,6 +39,6 @@ in emacs.overrideAttrs (o: {
   version = "30.0.50";
   patches = [];  
   postInstall = o.postInstall + ''
-    find $out/share/applications -type f -name '*.desktop' -and -not -name emacs.desktop -exec rm -v {} \;
+    find $out/share/applications -type f -name '*.desktop' -and -not -name emacs.desktop -delete
   '';
 })
