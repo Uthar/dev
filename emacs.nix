@@ -16,8 +16,8 @@ let
   # https://git.savannah.gnu.org/cgit/emacs.git/log/
   src = fetchFromSavannah {
     repo = "emacs";
-    rev = "94bcd7964bbb20bc8ff8a91a9656452a97139d60";
-    hash = "sha256-Ka6x1Zc8P/yxRWXSVXS0gEBOAZK7L4uF6Uz+CEcubk4=";
+    rev = "f7725d85f3132fb684032438f81defcb481892b7";
+    hash = "sha256-fDSlEf1FpjOu5t1lzKFg6Fkzy5mztdZKtt8SqmPdH2k=";
   };
 
   siteStart = pkgs.writeText "site-lisp.el" ''
@@ -31,12 +31,12 @@ let
     withGTK2 = true;
     withSQLite3 = true;
     withTreeSitter = true;
-    withNativeCompilation = true; # Takes too long
+    withNativeCompilation = false; # Takes too long
   };
   
 in emacs.overrideAttrs (o: {
   inherit src;
-  version = "30.0.50";
+  version = "31.0.50";
   patches = [];  
   postInstall = o.postInstall + ''
     find $out/share/applications -type f -name '*.desktop' -and -not -name emacs.desktop -delete
