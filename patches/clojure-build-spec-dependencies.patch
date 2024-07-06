@@ -8,10 +8,10 @@
        <arg value="clojure.core"/>
        <arg value="clojure.core.protocols"/>
        <arg value="clojure.core.server"/>
-@@ -86,6 +87,9 @@
-       <arg value="clojure.uuid"/>
-       <arg value="clojure.core.reducers"/>
+@@ -91,6 +92,9 @@
        <arg value="clojure.math"/>
+       <arg value="clojure.tools.deps.interop"/>
+       <arg value="clojure.repl.deps"/>
 +      <arg value="clojure.spec.alpha"/>
 +      <arg value="clojure.spec.gen.alpha"/>
 +      <arg value="clojure.core.specs.alpha"/>
@@ -19,4 +19,4 @@
    </target>
  
 
-Diff finished.  Fri Oct  7 20:21:09 2022
+Diff finished.  Fri Jul  5 10:25:24 2024
