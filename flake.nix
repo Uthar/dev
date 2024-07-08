@@ -27,6 +27,7 @@
         cljpkgs = nix-clj.packages.${system};
         wpebackends = pkgs.callPackage ./wpebackends.nix {};
       in rec {
+        git = pkgs.callPackage ./git.nix { inherit sqlite; };
         jdk = pkgs.jdk17;
         jdk_minimal = pkgs.jdk17.override {
           headless = true;
