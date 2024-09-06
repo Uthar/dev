@@ -18,13 +18,13 @@ let
 in stdenvNoCC.mkDerivation rec {
 
   pname = "clojure";
-  version = "1.12.0-beta1";
+  version = "1.12.0";
 
   src = fetchFromGitHub {
     owner = "clojure";
     repo = "clojure";
     rev = "clojure-${version}";
-    hash = "sha256-JhJHXPON35VWu4su3VwX7NYWI8gm7gpMnYvrF2CuI14=";
+    hash = "sha256-n6tHTKviB+/urrYUIfG7jKfYU9jXincdgz4cjFMXxp0=";
   };
 
   patches = [ ./patches/clojure-build-spec-dependencies.patch ];
