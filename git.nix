@@ -44,6 +44,7 @@ in stdenv.mkDerivation (finalAttrs: {
   postPatch = lib.optionalString (withPerl || withDocs) ''
     substituteInPlace Makefile --replace /usr/bin/perl ${perl}/bin/perl
   '';
+  DEFAULT_HELP_FORMAT = "info";
   buildPhase = ''
     make prefix=$out ${opts} all
   '' + lib.optionalString withDocs ''
