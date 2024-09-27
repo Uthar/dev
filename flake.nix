@@ -105,6 +105,7 @@
           ];
         });
         lem = pkgs.callPackage ./lem.nix {};
+        adhocify = pkgs.callPackage ./adhocify.nix {};
       });
     };
 
