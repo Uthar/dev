@@ -33,8 +33,8 @@ in stdenv.mkDerivation (finalAttrs: {
   src = fetchFromGitHub {
     owner = "uthar";
     repo = "git";
-    rev = "a24c2e90faed6df159e948626d90ec413db32297";
-    hash = "sha256-E5ukJwoJ2FqDd821+hbG/rCIpCefH/AnGViO23eQDlk=";
+    rev = "1ecf13bd6d0f7e5360c38fbc11e91101b778b2ee";
+    hash = "sha256-XXw4oE+YP0b1e9CzcR2M9jufgDyKUysUNA1i7Kk6bF0=";
   };
   nativeBuildInputs = [ installShellFiles ];
   buildInputs = [ zlib sqlite curl gettext expat openssl ]
