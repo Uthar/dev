@@ -4,10 +4,10 @@ stdenv.mkDerivation (finalAttrs: {
   pname = "adhocify";
   version = "trunk";
   src = fetchFromGitHub {
-    owner = "quitesimpleorg";
+    owner = "Uthar";
     repo = "adhocify";
-    rev = "25fe05e702ac83059db6a14d432bf2998f990caa";
-    hash = "sha256-OdfvcEeqHXDEj7uyHcQR9OEYA3LjeaOLt4ofI97swl0=";
+    rev = "69fdb239440403527bd25c79290f3ef26104926d";
+    hash = "sha256-ndPEhLoGSOZhbGJa43FKdmlZyappLLtyqNNjMAOFBu4=";
   };
   postPatch = ''
     substituteInPlace Makefile --replace /usr/local $out
