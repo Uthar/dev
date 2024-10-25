@@ -2,15 +2,15 @@
 
 stdenv.mkDerivation rec {
   pname = "sqlite";
-  version = "3.46.1";
+  version = "3.47.0";
 
   # https://sqlite.org/news.html
   src = fetchurl {
-    url = "https://sqlite.org/2024/sqlite-autoconf-3460100.tar.gz";
-    hash = "sha256-Z9P+bSaObq3crjcn/OWPzI6cU4ab3Qegxh443fKWUHE=";
+    url = "https://sqlite.org/2024/sqlite-autoconf-3470000.tar.gz";
+    hash = "sha256-g+shpvamSfUG34vTqrhaCPdVbO7V29jep0PqAD/DqVc=";
   };
 
-  buildInputs = [ zlib readline ];
+  buildInputs = [ readline ];
 
   configureFlags = [ "--enable-threadsafe" "--enable-readline" ];
 
