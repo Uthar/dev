@@ -16,8 +16,8 @@ let
   # https://git.savannah.gnu.org/cgit/emacs.git/log/
   src = fetchFromSavannah {
     repo = "emacs";
-    rev = "f7725d85f3132fb684032438f81defcb481892b7";
-    hash = "sha256-fDSlEf1FpjOu5t1lzKFg6Fkzy5mztdZKtt8SqmPdH2k=";
+    rev = "df677f65fd1b4f0d16e59d5df9735139d2a667c8";
+    hash = "sha256-3COpJq5OTgdc80nBhfGF50VUqsixbx8kSgyV0gdigCs=";
   };
 
   siteStart = pkgs.writeText "site-lisp.el" ''
@@ -31,7 +31,7 @@ let
     withGTK2 = true;
     withSQLite3 = true;
     withTreeSitter = true;
-    withNativeCompilation = false; # Takes too long
+    withNativeCompilation = true;
   };
   
 in emacs.overrideAttrs (o: {
