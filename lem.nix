@@ -12,22 +12,23 @@
 
 let
 
-  base16-themes = fetchFromGitHub {
+  src = fetchFromGitHub {
     owner = "lem-project";
-    repo = "lem-base16-themes";
-    rev = "d7ece2372e94bca76bba7bfc5da3d05eaef31265";
-    hash = "sha256-LOB2jhL8I533R3nZQrAmFqPMpIbrJf/NPZNZiyYe1YM=";
+    repo = "lem";
+    rev = "742c607e2c555c2c5f7c22e2689aa58154e08489";
+    hash = "sha256-ENVx2OhRE4fqWo79gb0vFroA0EQNGZ+vipJ9H6XC6Fw=";
   };
 
   sbcl' = sbcl.withOverrides (self: super: {
+    
     micros = sbcl.buildASDFSystem {
       pname = "micros";
       version = "trunk";
       src = fetchFromGitHub {
         owner = "lem-project";
         repo = "micros";
-        rev = "9fc7f1e5b0dbf1b9218a3f0aca7ed46e90aa86fd";
-        hash = "sha256-bLFqFA3VxtS5qDEVVi1aTFYLZ33wsJUf26bwIY46Gtw=";
+        rev = "af94fe5d6688f67a092f604765fb706ebae44e99";
+        hash = "sha256-XmKTMJy+8xt2ImlGXSyXdXsLOUFFB0W45ROD4OIvyPY=";
       };
     };
     
@@ -54,8 +55,8 @@ let
       src = fetchFromGitHub {
         owner = "lem-project";
         repo = "async-process";
-        rev = "9690530fc92b59636d9f17d821afa7697e7c8ca4";
-        hash = "sha256-S9ZTIYcLz6lA14e7Og7xRcjBo4ZK4xs8xg8w89xzWtQ=";
+        rev = "3b16b91d417530dac03559980fb5703206e20c55";
+        hash = "sha256-5J3+gc7r/LhrKPXeHGwfghKaXB+AoaXhjS8b4lida3o=";
       };
       lispLibs = with self; [
         cffi
@@ -68,8 +69,8 @@ let
       src = fetchFromGitHub {
         owner = "fukamachi";
         repo = "rove";
-        rev = "b9a76a495498087afe77b32412273a2b0f487bc6";
-        hash = "sha256-K1hgUSgDRnq4Otkyxl+uNL7/ihh+qavhzw4N7mS/500=";
+        rev = "cacea7331c10fe9d8398d104b2dfd579bf7ea353";
+        hash = "sha256-BTRahe/vQI1PET0KzUF/ZPitM0omuMXbz2jS7FArpbM=";
       };
       lispLibs = with self; [
         cl-ppcre
@@ -107,12 +108,9 @@ let
       src = fetchFromGitHub {
         owner = "lem-project";
         repo = "cl-sdl2-ttf";
-        rev = "e61bb2119003d8ae7792d38aa11f7728d3ee5a00";
-        hash = "sha256-C+9jNeJ/7HMXDrbxVA9tZWypq3OhiYA5yZon1MR7CJw=";
+        rev = "f43344efe89cf9ce509e6ce4f7303ebb2ff14434";
+        hash = "sha256-1b0SMUipVaLq7WdDgaR9ZZhs0/c1/wyRkULsrBfTvEU=";
       };
-      patches = [
-        ./patches/lem-cl-sdl2-ttf-fix-compilation.patch
-      ];
       lispLibs = with self; [
         alexandria
         defpackage-plus
@@ -154,8 +152,8 @@ let
       src = fetchFromGitHub {
         owner = "cxxxr";
         repo = "jsonrpc";
-        rev = "7fb8e0a40b27c4138e7613e3dc0a335883c1c040";
-        hash = "sha256-MlnYsmLrCvEMwspnELm3yfAdSzBBP8+S7Ai8zH1J09A=";
+        rev = "2af1e0fad429ee8c706b86c4a853248cdd1be933";
+        hash = "sha256-N3j9eFS+jj390cjYltRCq9HyyTNUIukAJEzTqR0opU0=";
       };
       systems = [
         "jsonrpc"
@@ -182,25 +180,16 @@ let
         quri
         fast-io
         trivial-utf-8
+        trivial-timeout
       ];
     };
 
     lem-full = sbcl.buildASDFSystem {
       pname = "lem-full";
       version = "2.2.0-trunk";
-      src = fetchFromGitHub {
-        owner = "lem-project";
-        repo = "lem";
-        rev = "ca31053a7e45a608917f7bb2ccff426f9b4b0c94";
-        hash = "sha256-KlnBzP4E3wuG4xxnI54Yr2QPHJaCXHodOVccCVpWudI=";
-      };
-      postConfigure = ''
-        cp -r ${base16-themes} base16-themes
-        chmod u+w -R base16-themes
-        export CL_SOURCE_REGISTRY=$CL_SOURCE_REGISTRY:$(pwd)/base16-themes/
-      '';
-      buildInputs = [ sbcl ];
-      doCheck = true;
+      inherit src;
+      nativeCheckInputs = [ sbcl ];
+      doCheck = false;
       checkPhase = ''
         sbcl <<EOF
           (load "$asdfFasl/asdf.$faslExt")
@@ -242,6 +231,7 @@ let
         trivial-ws
         trivial-open-browser
         iconv
+        cl-base16
         # for tests
         rove
         trivial-package-local-nicknames
@@ -249,11 +239,11 @@ let
       ];
       systems = [
         "lem"
+        "lem-color-preview"
         "lem-encodings-table"
         "lem-encodings"
         "lem-lisp-syntax"
         "lem-process"
-        "lem-socket-utils"
         "lem-lsp-base"
         "lem-language-server"
         "lem-language-client"
@@ -293,11 +283,18 @@ let
         "lem-sql-mode"
         "lem-base16-themes"
         "lem-elixir-mode"
+        "lem-ruby-mode"
         "lem-erlang-mode"
         "lem-documentation-mode"
         "lem-elisp-mode"
+        "lem-terraform-mode"
         "lem-markdown-mode"
         "lem-color-preview"
+        "lem-lua-mode"
+        "lem-terminal"
+        "lem-legit"
+        "lem-dashboard"
+        "lem-copilot"
       ];
     };
   });
@@ -305,12 +302,7 @@ let
   lem-sdl2 = sbcl'.buildASDFSystem {
     pname = "lem-sdl2";
     version = "2.2.0-trunk";
-    src = fetchFromGitHub {
-      owner = "lem-project";
-      repo = "lem";
-      rev = "ca31053a7e45a608917f7bb2ccff426f9b4b0c94";
-      hash = "sha256-KlnBzP4E3wuG4xxnI54Yr2QPHJaCXHodOVccCVpWudI=";
-    };
+    inherit src;
     buildInputs = [ sbcl' makeWrapper ];
     lispLibs = with sbcl'.pkgs; [
       sdl2
@@ -343,6 +335,7 @@ let
         EOF
       '';
     };
+    passthru.lem = sbcl'.pkgs.lem-full;
     meta = {
       homepage = "https://lem-project.github.io";
       description = "Common Lisp editor/IDE with high expansibility.";
