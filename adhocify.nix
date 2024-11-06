@@ -1,13 +1,12 @@
-{ lib, stdenv, fetchFromGitHub, ... }:
+{ lib, stdenv, fetchgit, ... }:
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "adhocify";
   version = "trunk";
-  src = fetchFromGitHub {
-    owner = "Uthar";
-    repo = "adhocify";
-    rev = "69fdb239440403527bd25c79290f3ef26104926d";
-    hash = "sha256-ndPEhLoGSOZhbGJa43FKdmlZyappLLtyqNNjMAOFBu4=";
+  src = fetchgit {
+    url = "https://github.com/Uthar/adhocify";
+    rev = "5999e125e73bc5eb3b416217c5e2f419acae65e6";
+    hash = "sha256-BoQRVIz46np5OPX+6cw6UPSihc4CSW5k3Vd1icSgX2A=";
   };
   postPatch = ''
     substituteInPlace Makefile --replace /usr/local $out
