@@ -1,46 +1,41 @@
-{ lib, stdenv
+{ stdenv
+, lib
+, fetchzip
 , installShellFiles
 , tcl
-, libiconv
-, fetchurl
-, fetchpatch
+, tcllib
 , zlib
 , openssl
 , readline
-, ed
-, which
-, tcllib
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
+  
   pname = "fossil";
-  version = "2.24";
+  version = "735bd3dccbeecada15611a1eacf76d2b9822f44223a918282ac4eab0acb78c5f";
 
-  src = let
-    rev = "version-${version}";
-  in fetchurl {
-    url = "https://www.fossil-scm.org/home/tarball/${rev}/fossil-${rev}.tar.gz";
-    sha256 = "sha256-3f0hkoTjF/KmhEFsqezWuMf62XfFdQGiDLtz76Q3piE=";
+  src = fetchzip {
+    url = "https://www.fossil-scm.org/home/tarball/${finalAttrs.version}/fossil-${finalAttrs.version}.tar.gz";
+    hash = "sha256-Q0wfx0W3N6nCh6HdxOnK5wI2doENeuOVqGqwCqRpnTw=";
   };
 
-  configureFlags = [
-    "--json"
-  ];
+  configureFlags = ["--json"];
 
   nativeBuildInputs = [ installShellFiles tcl tcllib ];
 
-  buildInputs = [ zlib openssl readline which ed ];
+  buildInputs = [ zlib openssl readline ];
 
-  enableParallelBuilding = true;
-
-  preBuild = ''
-    export USER=nonexistent-but-specified-user
-  '';
-
-  installPhase = ''
-    mkdir -p $out/bin
-    INSTALLDIR=$out/bin make install
+  postInstall = ''
     installManPage fossil.1
+    installShellCompletion --bash tools/fossil-autocomplete.bash
+    installShellCompletion --zsh tools/fossil-autocomplete.zsh
   '';
 
-}
+  meta = {
+    description = "Distributed SCM system";
+    homepage = "https://fossil-scm.org/";
+    license = lib.licenses.bsd2;
+    mainProgram = "fossil";
+  };
+  
+})
