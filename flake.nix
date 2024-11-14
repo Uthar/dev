@@ -106,6 +106,12 @@
         });
         lem = pkgs.callPackage ./lem.nix {};
         adhocify = pkgs.callPackage ./adhocify.nix {};
+        bash = pkgs.bashInteractive.overrideAttrs (a: {
+          patches = []
+            ++ [ ./patches/bash-try-alias-completion-after-default.patch ]
+            ++ (a.patches or [])
+          ;
+        });
         i3 = pkgs.callPackage ./i3.nix {};
       });
     };

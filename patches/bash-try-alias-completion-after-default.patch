@@ -1,0 +1,27 @@
+Try completion from alias before invoking the default handler.
+
+That way, both dynamic completion and progcomp_alias can be enabled.
+
+Previously, dynamic completion prevented alias expansion.
+--- pcomplete.c
++++ pcomplete.c
+@@ -1657,9 +1657,6 @@ programmable_completions (cmd, word, start, end, foundp)
+ 	    ret = gen_progcomp_completions (t, ocmd, word, start, oend, &found, &retry, &lastcs);
+ 	}
+ 
+-      if (found == 0)
+-	ret = gen_progcomp_completions (DEFAULTCMD, ocmd, word, start, oend, &found, &retry, &lastcs);
+-
+ #if defined (ALIAS)
+       /* Look up any alias for CMD, try to gen completions for it */
+       /* Look up the alias, find the value, build a new line replacing CMD
+@@ -1718,6 +1715,9 @@ programmable_completions (cmd, word, start, end, foundp)
+ 	}
+ #endif /* ALIAS */
+ 
++	if (found == 0 && retry == 0)
++		ret = gen_progcomp_completions (DEFAULTCMD, ocmd, word, start, oend, &found, &retry, &lastcs);
++
+       count++;
+ 
+       if (count > 32)
