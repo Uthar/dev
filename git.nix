@@ -63,4 +63,11 @@ stdenv.mkDerivation (finalAttrs: {
     installShellCompletion --cmd git --bash contrib/completion/git-completion.bash
     installShellCompletion --cmd git --zsh contrib/completion/git-completion.zsh
   '';
+
+  meta = {
+    description = "Distributed SCM utilities";
+    homepage = "https://git-scm.com/";
+    license = lib.licenses.gpl2Only;
+    mainProgram = "git";
+  };
 })
