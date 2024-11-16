@@ -60,7 +60,7 @@ stdenv.mkDerivation (finalAttrs: {
     ++ (lib.optional withMan "install-man");
 
   postInstall = ''
-    installShellCompletion --bash contrib/completion/git-completion.bash
-    installShellCompletion --zsh contrib/completion/git-completion.zsh
+    installShellCompletion --cmd git --bash contrib/completion/git-completion.bash
+    installShellCompletion --cmd git --zsh contrib/completion/git-completion.zsh
   '';
 })
