@@ -1,0 +1,12 @@
+--- a/build.xml
++++ b/build.xml
+@@ -865,6 +865,7 @@
+              whenmanifestonly="${optional.jars.whenmanifestonly}">
+           <selector refid="needs.@{dep}"/>
+           <metainf dir="${build.dir}">
++            <selector if="@{dep}.present"/>
+             <include name="LICENSE.txt"/>
+             <include name="NOTICE.txt"/>
+           </metainf>
+
+Diff finished.  Mon Nov  4 01:29:38 2024

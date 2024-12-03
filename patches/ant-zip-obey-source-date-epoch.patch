@@ -1,0 +1,15 @@
+Wydaje się to być rozsądne, inaczej musiałbym ustawiać w każdym jar tasku.
+
+--- a/src/main/org/apache/tools/ant/taskdefs/Zip.java
++++ b/src/main/org/apache/tools/ant/taskdefs/Zip.java
+@@ -115,7 +115,7 @@
+     protected Hashtable<String, String> addedDirs = new Hashtable<>();
+     private final List<String> addedFiles = new Vector<>();
+ 
+-    private String fixedModTime = null; // User-provided.
++    private String fixedModTime = System.getenv("SOURCE_DATE_EPOCH"); // User-provided.
+     private long modTimeMillis = 0; // Calculated.
+ 
+     /**
+
+Diff finished.  Thu Nov 28 21:57:15 2024
