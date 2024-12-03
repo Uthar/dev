@@ -1,4 +1,5 @@
-{ pkgs, stdenvNoCC, ant, fetchFromGitHub, jdk, ... }:
+{ stdenvNoCC, lib, testers, makeWrapper, ant, fetchFromGitHub, jdk, ... }:
+
 let
 
   spec = fetchFromGitHub {
@@ -15,7 +16,7 @@ let
     hash = "sha256-VqBSQFjidH4f4cQ2wFseIjKO/UoO2tim4vN3vOPwxUk=";
   };
 
-in stdenvNoCC.mkDerivation rec {
+in stdenvNoCC.mkDerivation (finalAttrs: {
 
   pname = "clojure";
   version = "1.12.0";
@@ -23,23 +24,53 @@ in stdenvNoCC.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "clojure";
     repo = "clojure";
-    rev = "clojure-${version}";
+    rev = "clojure-${finalAttrs.version}";
     hash = "sha256-n6tHTKviB+/urrYUIfG7jKfYU9jXincdgz4cjFMXxp0=";
   };
 
-  patches = [ ./patches/clojure-build-spec-dependencies.patch ];
+  patches = [
+    ./patches/clojure-load-compile-older-sources.patch
+    ./patches/clojure-compiler-determinism.patch
+    ./patches/clojure-build-spec-dependencies.patch
+  ];
 
-  nativeBuildInputs = [ ant jdk ];
-
-  buildPhase = ''
+  postPatch = ''
     cp -r ${spec}/src/main/clojure/clojure/spec src/clj/clojure
     cp -r ${coreSpecs}/src/main/clojure/clojure/core/specs src/clj/clojure/core
-    ant build jar
+  '';
+
+  nativeBuildInputs = [ ant makeWrapper ];
+
+  buildPhase = ''
+    runHook preBuild
+
+    ant jar
+
+    runHook postBuild
   '';
 
   installPhase = ''
-    mkdir -p $out/share/java
-    cp -v clojure-${version}.jar $out/share/java
+    runHook preInstall
+
+    install -Dm444 clojure.jar $out/share/java/$name.jar
+
+    makeWrapper ${jdk}/bin/java $out/bin/clojure \
+      --prefix CLASSPATH : $out/share/java/$name.jar \
+      --add-flags clojure.main
+
+    runHook postInstall
   '';
 
-}
+  passthru.tests.version = testers.testVersion {
+    package = finalAttrs.finalPackage;
+    command = "clojure -e '(clojure-version)'";
+  };
+
+  meta = {
+    description = "Java based Lisp dialect";
+    homepage = "https://clojure.org/";
+    license = lib.licenses.epl10;
+    mainProgram = "clojure";
+  };
+  
+})

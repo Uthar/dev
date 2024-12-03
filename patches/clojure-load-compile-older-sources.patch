@@ -1,0 +1,17 @@
+Only recompile source if it is older than the corresponding class file.
+
+Otherwise, jars with fixed timestamps cause mass recompilation.
+
+--- a/src/jvm/clojure/lang/RT.java
++++ b/src/jvm/clojure/lang/RT.java
+@@ -459,7 +459,7 @@
+ 
+ 	if((classURL != null &&
+ 	    (cljURL == null
+-	     || lastModified(classURL, classfile) > lastModified(cljURL, scriptfile)))
++	     || lastModified(classURL, classfile) >= lastModified(cljURL, scriptfile)))
+ 	   || classURL == null) {
+ 		try {
+ 			Var.pushThreadBindings(
+
+Diff finished.  Thu Nov 28 07:49:56 2024

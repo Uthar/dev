@@ -1,0 +1,22 @@
+Fixes spurious reordering in locals nulling code due to lack of determinism
+across JVM executions in the default Object.hashCode.
+
+Also switching to serial GC helped a bit, bit not completely.
+
+Source: https://ask.clojure.org/index.php/12249/bytecode-not-100-deterministic-given-identical-inputs
+
+--- a/src/jvm/clojure/lang/Compiler.java
++++ b/src/jvm/clojure/lang/Compiler.java
+@@ -6515,6 +6515,10 @@
+ 	public Class getPrimitiveType(){
+ 		return maybePrimitiveType(init);
+ 	}
++
++  public int hashCode(){
++    return Util.hashCombine(idx, sym.hashCode());
++  }
+ }
+ 
+ public static class LocalBindingExpr implements Expr, MaybePrimitiveExpr, AssignableExpr{
+
+Diff finished.  Thu Nov 28 09:16:30 2024
