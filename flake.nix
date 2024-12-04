@@ -4,14 +4,15 @@
   description = "Development environment";
 
   inputs.nixpkgs.url = "nixpkgs";
-  inputs.nix.url = "nix/2.22.1";
+  inputs.nix.url = "nix/2.25.2";
   inputs.nix-clj.url = "github:uthar/nix-clj";
 
   outputs = { self, nixpkgs, nix, nix-clj }:
     let
       systems = ["x86_64-linux"];
+      lib = nixpkgs.lib;
     in {
-      devShells = nixpkgs.lib.genAttrs systems (system: let
+      devShells = lib.genAttrs systems (system: let
         pkgs = nixpkgs.outputs.legacyPackages.${system};
         sbcl' = pkgs.sbcl.withPackages (ps: with ps; [
           alexandria bordeaux-threads cl-cpus jzon
@@ -21,9 +22,8 @@
           packages = [ sbcl' ];
         };
       });
-      packages = nixpkgs.lib.genAttrs systems (system: let
+      packages = lib.genAttrs systems (system: let
         pkgs = nixpkgs.outputs.legacyPackages.${system};
-        nix-pkg = nix.packages.${system}.default;
         cljpkgs = nix-clj.packages.${system};
         wpebackends = pkgs.callPackage ./wpebackends.nix {};
       in rec {
@@ -90,7 +90,14 @@
         clasp = pkgs.callPackage ./clasp.nix {};
         abcl = pkgs.callPackage ./abcl.nix { inherit jdk ant; };
         openssl_1_0_0 = pkgs.callPackage ./openssl_1_0_0.nix {};
-        nix = pkgs.callPackage ./nix.nix { nix = nix-pkg; };
+        nix = self.inputs.nix.packages.${system}.nix.overrideAttrs (prev: {
+          patches = prev.patches or [] ++ [
+            ./patches/nix-print-hash-mismatch-url.patch
+            ./patches/nix-log-format-setting.patch
+          ];
+          doCheck = false;
+          doInstallCheck = false;
+        });
         libuv = pkgs.libuv.overrideAttrs (oa: {
           dontDisableStatic = true;
           doCheck = false;

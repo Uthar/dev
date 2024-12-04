@@ -5,7 +5,7 @@
                      worker.hashMismatch = true;
                      delayedException = std::make_exception_ptr(
 -                        BuildError("hash mismatch in fixed-output derivation '%s':\n  specified: %s\n     got:    %s",
-+                        BuildError("hash mismatch in fixed-output derivation '%s':\n     urls:   %s\n  specified: %s\n     got:    %s",
++                        BuildError("hash mismatch in fixed-output derivation '%s':\n       urls: %s\n  specified: %s\n        got: %s",
                              worker.store.printStorePath(drvPath),
 +                            drv->env.contains("urls") ? drv->env["urls"] : "(none)",
                              wanted.to_string(HashFormat::SRI, true),

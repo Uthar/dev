@@ -1,0 +1,57 @@
+Replace the CLI flag with a setting. A flag will still be generated based on the
+setting.
+--- a/src/libmain/common-args.cc
++++ b/src/libmain/common-args.cc
+@@ -60,14 +60,6 @@ MixCommonArgs::MixCommonArgs(const std::string & programName)
+         }
+     });
+ 
+-    addFlag({
+-        .longName = "log-format",
+-        .description = "Set the format of log output; one of `raw`, `internal-json`, `bar` or `bar-with-logs`.",
+-        .category = loggingCategory,
+-        .labels = {"format"},
+-        .handler = {[](std::string format) { setLogFormat(format); }},
+-    });
+-
+     addFlag({
+         .longName = "max-jobs",
+         .shortName = 'j',
+--- a/src/libstore/globals.hh
++++ b/src/libstore/globals.hh
+@@ -127,6 +127,9 @@ public:
+         "The number of lines of the tail of "
+         "the log to show if a build fails."};
+ 
++    Setting<std::string> logFormat{this, "bar", "log-format",
++        "The format of builder log output; one of `raw`, `internal-json`, `bar` or `bar-with-logs`."};
++
+     MaxBuildJobsSetting maxBuildJobs{
+         this, 1, "max-jobs",
+         R"(
+
+
+Set the log format before checking for legacy commands, so that the setting
+works for nix-build etc. as well.
+--- a/src/nix/main.cc
++++ b/src/nix/main.cc
+@@ -390,6 +390,9 @@ void mainWrapped(int argc, char * * argv)
+ 
+     Finally f([] { logger->stop(); });
+ 
++    setLogFormat(settings.logFormat);
++    settings.verboseBuild = false;
++
+     programPath = argv[0];
+     auto programName = std::string(baseNameOf(programPath));
+     auto extensionPos = programName.find_last_of(".");
+@@ -408,9 +411,6 @@ void mainWrapped(int argc, char * * argv)
+ 
+     evalSettings.pureEval = true;
+ 
+-    setLogFormat("bar");
+-    settings.verboseBuild = false;
+-
+     // If on a terminal, progress will be displayed via progress bars etc. (thus verbosity=notice)
+     if (nix::isTTY()) {
+         verbosity = lvlNotice;
