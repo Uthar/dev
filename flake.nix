@@ -4,10 +4,11 @@
   description = "Development environment";
 
   inputs.nixpkgs.url = "nixpkgs";
+  inputs.nixpkgs_latest.url = "nixpkgs/nixpkgs-unstable";
   inputs.nix.url = "nix/2.25.2";
   inputs.nix-clj.url = "github:uthar/nix-clj";
 
-  outputs = { self, nixpkgs, nix, nix-clj }:
+  outputs = { self, nixpkgs, nixpkgs_latest, nix, nix-clj }:
     let
       systems = ["x86_64-linux"];
       lib = nixpkgs.lib;
@@ -103,7 +104,13 @@
           doCheck = false;
         });
         mg = pkgs.callPackage ./mg.nix {};
-        wpewebkit = pkgs.callPackage ./wpewebkit.nix {};
+        wpewebkit = nixpkgs_latest.outputs.legacyPackages.${system}.callPackage ./wpewebkit.nix {
+          harfbuzz = pkgs.harfbuzzFull;
+          inherit (pkgs.gst_all_1)
+            gst-plugins-bad
+            gst-plugins-base
+          ;
+        };
         wpebackend-fdo = wpebackends.fdo;
         cog = pkgs.callPackage ./cog.nix { inherit wpewebkit wpebackend-fdo; };
         rlwrap = pkgs.rlwrap.overrideAttrs (oa: {
