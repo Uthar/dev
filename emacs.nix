@@ -28,7 +28,8 @@ let
   emacs = pkgs.emacs.override {
     inherit sqlite;
     inherit siteStart;
-    withGTK2 = true;
+    withGTK3 = true;
+    withXwidgets = false;
     withSQLite3 = true;
     withTreeSitter = true;
     withNativeCompilation = true;
