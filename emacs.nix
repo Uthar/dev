@@ -16,8 +16,8 @@ let
   # https://git.savannah.gnu.org/cgit/emacs.git/log/
   src = fetchFromSavannah {
     repo = "emacs";
-    rev = "df677f65fd1b4f0d16e59d5df9735139d2a667c8";
-    hash = "sha256-3COpJq5OTgdc80nBhfGF50VUqsixbx8kSgyV0gdigCs=";
+    rev = "7930fe2f44f50b6a7abf5fbe1218dcc15e85b28d";
+    hash = "sha256-pDhC6CuSlO+FnCA9klgk/O++pAUCqTKrzFPgX6HOGJs=";
   };
 
   siteStart = pkgs.writeText "site-lisp.el" ''
