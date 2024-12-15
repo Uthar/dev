@@ -21,6 +21,7 @@
 , gst-plugins-base
 , harfbuzz
 , lcms
+, libGL
 , libavif
 , libbacktrace
 , libepoxy
@@ -59,6 +60,8 @@ stdenv.mkDerivation (finalAttrs: {
     hash = "sha256-1g5VjYCLqiwiAIPn5j2SvMzRvfT65SxE/zd3fNCvJO8=";
   };
 
+  outputs = [ "out" "bin" "dev" "doc" ];
+
   cmakeFlags = [
     "-DPORT=WPE"
   ];
@@ -84,6 +87,7 @@ stdenv.mkDerivation (finalAttrs: {
     gst-plugins-base
     harfbuzz
     lcms
+    libGL
     libavif
     libbacktrace
     libepoxy
