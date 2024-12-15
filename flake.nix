@@ -26,7 +26,6 @@
       packages = lib.genAttrs systems (system: let
         pkgs = nixpkgs.outputs.legacyPackages.${system};
         cljpkgs = nix-clj.packages.${system};
-        wpebackends = pkgs.callPackage ./wpebackends.nix {};
       in rec {
         git = pkgs.callPackage ./git.nix { inherit sqlite; };
         jdk = pkgs.jdk17;
@@ -111,8 +110,11 @@
             gst-plugins-base
           ;
         };
-        wpebackend-fdo = wpebackends.fdo;
-        cog = pkgs.callPackage ./cog.nix { inherit wpewebkit wpebackend-fdo; };
+        wpebackends = nixpkgs_latest.outputs.legacyPackages.${system}.callPackage ./wpebackends.nix {};
+        cog = nixpkgs_latest.outputs.legacyPackages.${system}.callPackage ./cog.nix {
+          inherit wpewebkit;
+          inherit (wpebackends) wpebackend-fdo;
+        };
         rlwrap = pkgs.rlwrap.overrideAttrs (oa: {
           patches = oa.patches or [] ++ [
             ./patches/rlwrap-work-in-emacs-term.patch

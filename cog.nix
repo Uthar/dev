@@ -1,45 +1,69 @@
-{ pkgs, lib, stdenv
+{ stdenv
+, lib
 , makeWrapper
+, fetchFromGitHub
 , meson
 , ninja
 , pkg-config
-, wpewebkit
+, wpewebkit, glib, libsoup_3, libwpe
 , wpebackend-fdo
 , libportal
+, libepoxy
+, mesa
+, libinput
+, cairo
+, libGL
+, libxkbcommon
 , wayland
 , wayland-protocols
-, ... }:
+, wayland-scanner
+}:
 
 # FIXME builds, but doesn't work
-stdenv.mkDerivation {
+stdenv.mkDerivation (finalAttrs: {
   pname =  "cog";
-  version = "0.18.2-trunk";
-  src = pkgs.fetchFromGitHub {
+  version = "0.18.4";
+  
+  src = fetchFromGitHub {
     owner = "Igalia";
     repo = "cog";
-    rev = "dd2012a1461b10b914da1eacc2d6fc423d07fffc";
-    hash = "sha256-H+qWAT6fUHrlAjQEyLbz+BdwxoeP68WdpMTR6iaCHHc=";
+    rev = "${finalAttrs.version}";
+    hash = "sha256-EucYz7Dd6XKK6EkV8e62l+mkYdA0zSGKCvSY520F59U=";
   };
-  buildInputs = with pkgs; [
+
+  nativeBuildInputs = [
+    pkg-config
     meson
     ninja
-    pkg-config
-    wpewebkit
+    makeWrapper
+    wayland-scanner
+  ];
+  
+  buildInputs = [
+    wpewebkit glib libsoup_3 libwpe
     wpebackend-fdo
     libportal
+    libepoxy
+    mesa
+    libinput
+    cairo
+    libGL
+    libxkbcommon
     wayland
     wayland-protocols
-    makeWrapper
   ];
+  
   configurePhase = ''
     meson setup -Dprefix=$out build
   '';
+  
   buildPhase = ''
     ninja -C build
   '';
+  
   installPhase = ''
     ninja install -C build
     wrapProgram $out/bin/cog \
       --prefix LD_LIBRARY_PATH : ${wpebackend-fdo}/lib
   '';
-}
+})

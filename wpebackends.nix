@@ -1,47 +1,59 @@
-{ pkgs, lib, stdenv
+{ stdenv
+, lib
+, fetchFromGitHub
 , meson
 , ninja
 , pkg-config
 , cmake
 , wayland
+, wayland-scanner
 , libwpe
-, epoxy
+, libepoxy
 , glib
 , libxkbcommon
 , libGL
-, ... }:
+}:
 
 {
 
-  fdo = stdenv.mkDerivation {
+  wpebackend-fdo = stdenv.mkDerivation (finalAttrs: {
     pname = "WPEBackend-fdo";
-    version = "trunk";
-    src = pkgs.fetchFromGitHub {
+    version = "1.14.3";
+    
+    src = fetchFromGitHub {
       owner = "Igalia";
       repo = "WPEBackend-fdo";
-      rev = "f2901c6ed7f720a578bfd5830d12426c979c0afa";
-      hash = "sha256-8Vse/n4FSs97NtTfkrdzpd+I0/LYVOGgn+U6qNpPG5E=";
+      rev = "${finalAttrs.version}";
+      hash = "sha256-K5jp6dlQIs8FRdNHlK8IRkJHB9HW300HLtbcN0U1RhY=";
     };
-    buildInputs = [
+    
+    nativeBuildInputs = [
       pkg-config
       meson
       ninja
+      wayland-scanner
+    ];
+    
+    buildInputs = [
       wayland
       libwpe
-      epoxy
+      libepoxy
       glib
       libxkbcommon
-      libGL.dev
+      libGL
     ];
+    
     configurePhase = ''
       meson setup -Dprefix=$out build
     '';
+    
     buildPhase = ''
       ninja -C build
     '';
+    
     installPhase = ''
       ninja install -C build
     '';
-  };
+  });
 
 }
