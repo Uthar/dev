@@ -20,9 +20,10 @@
     
     packages = lib.genAttrs systems (system: let
       pkgs = nixpkgs.outputs.legacyPackages.${system};
+      finalPackages = self.outputs.packages.${system};
     in {
       git = pkgs.callPackage ./git.nix {
-        inherit (self.packages.${system}) sqlite;
+        inherit (finalPackages) sqlite;
       };
       jdk = pkgs.jdk17;
       jdk_minimal = pkgs.jdk17.override {
@@ -31,13 +32,13 @@
         enableGtk = false;
       };
       jre_minimal = pkgs.jre_minimal.override {
-        jdk = self.packages.${system}.jdk_minimal;
+        jdk = finalPackages.jdk_minimal;
       };
       jre_docker = pkgs.dockerTools.buildImage {
         name = "jre";
         tag = "latest";
         contents = [
-          self.packages.${system}.jdk_minimal
+          finalPackages.jdk_minimal
         ];
       };
       jdk_musl = pkgs.pkgsMusl.jdk17.override {
@@ -46,54 +47,54 @@
         enableGtk = false;
       };
       jdk_musl_minimal = pkgs.pkgsMusl.jre_minimal.override {
-        jdk = self.packages.${system}.jdk_musl;
+        jdk = finalPackages.jdk_musl;
       };
       jdk_musl_docker = pkgs.dockerTools.buildImage {
         name = "jre";
         tag = "musl";
         contents = [
-          self.packages.${system}.jdk_musl_minimal
+          finalPackages.jdk_musl_minimal
         ];
       };
       clojure = pkgs.callPackage ./clojure.nix {
-        inherit (self.packages.${system}) jdk ant;
+        inherit (finalPackages) jdk ant;
       };
       sbcl = pkgs.callPackage ./sbcl.nix { fat = false; };
       sbclFat = pkgs.callPackage ./sbcl.nix {
-        inherit (self.packages.${system}) sqlite;
+        inherit (finalPackages) sqlite;
         inherit (pkgs) libuv;
         fat = true;
       };
       sbclMusl = pkgs.callPackage ./sbcl-musl.nix {
-        inherit (self.packages.${system}) abcl;
+        inherit (finalPackages) abcl;
       };
       sbcl_docker = pkgs.dockerTools.buildImage {
         name = "sbcl";
         tag = "latest";
         contents = [
-          self.packages.${system}.sbcl
+          finalPackages.sbcl
         ];
       };
       sbcl_musl_docker = pkgs.dockerTools.buildImage {
         name = "sbcl";
         tag = "musl";
         contents = [
-          self.packages.${system}.sbclMusl
+          finalPackages.sbclMusl
         ];
       };
       gcl = pkgs.callPackage ./gcl.nix {};
       emacs = pkgs.callPackage ./emacs.nix {
-        inherit (self.packages.${system}) sqlite;
+        inherit (finalPackages) sqlite;
       };
       ant = pkgs.callPackage ./ant.nix {
-        inherit (self.packages.${system}) jdk;
+        inherit (finalPackages) jdk;
       };
       fd = pkgs.callPackage ./fd.nix {};
       sqlite = pkgs.callPackage ./sqlite.nix {};
       fossil = pkgs.callPackage ./fossil.nix {};
       clasp = pkgs.callPackage ./clasp.nix {};
       abcl = pkgs.callPackage ./abcl.nix {
-        inherit (self.packages.${system}) jdk ant;
+        inherit (finalPackages) jdk ant;
       };
       openssl_1_0_0 = pkgs.callPackage ./openssl_1_0_0.nix {};
       nix = pkgs.nixVersions.latest.overrideAttrs (prev: {
@@ -112,7 +113,7 @@
       wpewebkit = pkgs.callPackage ./wpewebkit.nix {};
       wpebackend-fdo = pkgs.callPackage ./wpebackend-fdo.nix {};
       cog = pkgs.callPackage ./cog.nix {
-        inherit (self.packages.${system}) wpewebkit wpebackend-fdo;
+        inherit (finalPackages) wpewebkit wpebackend-fdo;
       };
       rlwrap = pkgs.rlwrap.overrideAttrs (oa: {
         patches = oa.patches or [] ++ [
