@@ -25,4 +25,11 @@ stdenvNoCC.mkDerivation rec {
     cp -r dist/*.jar $out/share/java
     cp abcl $out/bin
   '';
+
+  meta = {
+    description = "JVM based Common Lisp implementation";
+    homepage = "https://abcl.org/";
+    license = lib.licenses.gpl2ClasspathPlus;
+    mainProgram = "abcl";
+  };
 }
