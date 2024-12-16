@@ -39,6 +39,7 @@ in emacs.overrideAttrs (o: {
   inherit src;
   version = "31.0.50";
   patches = [];  
+  configureFlags = o.configureFlags or [] ++ ["--disable-gc-mark-trace"];
   postInstall = o.postInstall + ''
     find $out/share/applications -type f -name '*.desktop' -and -not -name emacs.desktop -delete
   '';
