@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, zlib, readline, ... }:
+{ stdenv, lib, fetchurl, zlib, readline }:
 
 stdenv.mkDerivation rec {
   pname = "sqlite";
@@ -32,5 +32,11 @@ stdenv.mkDerivation rec {
     "-DSQLITE_MAX_VARIABLE_NUMBER=250000"
     "-DSQLITE_MAX_EXPR_DEPTH=10000"
   ]);
-   
+
+  meta = {
+    description = "SQL database engine";
+    homepage = "https://sqlite.org/";
+    license = lib.licenses.publicDomain;
+    mainProgram = "sqlite3";
+  };
 }
