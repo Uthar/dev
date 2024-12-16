@@ -1,4 +1,6 @@
-{ stdenv,
+{
+  stdenv,
+  lib,
   fetchgit,
   ninja,
   meson,
@@ -16,7 +18,7 @@
   pango,
   libev,
   perl,
-  ... }:
+}:
 
 stdenv.mkDerivation {
   pname = "i3";
@@ -43,4 +45,10 @@ stdenv.mkDerivation {
     libxkbcommon yajl pcre2 pango libev libstartup_notification
   ];
 
+  meta = {
+    description = "Tiling window manager";
+    homepage = "https://i3wm.org/";
+    license = lib.licenses.bsd3;
+    mainProgram = "i3";
+  };
 }
