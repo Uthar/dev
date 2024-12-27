@@ -26,8 +26,8 @@ stdenv.mkDerivation {
 
   src = fetchgit {
     url = "https://github.com/uthar/i3";
-    rev = "b46ae7e55b33becff357aa59444204625b390ab4";
-    hash = "sha256-jK8DRE8u+2w2hLMC5GehnuTHgxfAD0ArcniUzXBkQV8=";
+    rev = "83abce397d6f2777ca6a4f4ca8e05d43d183a785";
+    hash = "sha256-gOt39saODmXnRl5gTD1buGHkER6WJnGiGP+1/JZYoQU=";
   };
 
   mesonFlags = [ "--reconfigure" ];
